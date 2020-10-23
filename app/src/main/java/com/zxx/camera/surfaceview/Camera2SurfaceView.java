@@ -66,6 +66,24 @@ public class Camera2SurfaceView extends SurfaceView {
         }
     };
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        if (0 == mRationWidth || 0 == mRationHeight) {
+            setMeasuredDimension(width, height);
+        } else {
+            if (width < height * mRationWidth / mRationHeight) {
+                setMeasuredDimension(width, width * mRationHeight / mRationWidth);
+                Log.d(TAG,String.valueOf(mRationHeight)+" "+mRationWidth);
+            } else {
+                setMeasuredDimension(height * mRationWidth / mRationHeight, height);
+                Log.d(TAG,String.valueOf(mRationHeight)+" "+mRationWidth);
+            }
+        }
+    }
+
     private void setAspectRatio(int width, int height) {
         if (width < 0 || height < 0) {
             throw new IllegalArgumentException("Size cannot be negative.");

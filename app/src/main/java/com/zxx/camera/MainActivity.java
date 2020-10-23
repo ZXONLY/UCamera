@@ -25,18 +25,6 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
     }
 
-    private void checkPermission(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
-            for(String permission : permissions){
-                if(ContextCompat.checkSelfPermission(this,permission)!= PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(this,permissions,200);
-                    return;
-                }
-            }
-        }
-    }
-
     public void startCameraActivity(View view) {
         Intent intent = null;
         switch (view.getId()) {
@@ -62,11 +50,24 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, permissions, 200);
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
-    public void onRequestPermissionsResult(int request,String[] permissions,int[] grantResult){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M&&request==200){
-            for(int i = 0;i<permissions.length;i++){
-                if(grantResult[i] != PackageManager.PERMISSION_GRANTED){
+    public void onRequestPermissionsResult(int requestCode,String[] permissions,  int[]
+            grantResults) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && requestCode == 200) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "请在设置中打开摄像头和存储权限", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -81,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 200) {
             checkPermission();
         }
     }
+
 }

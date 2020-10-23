@@ -1,20 +1,31 @@
 package com.zxx.camera.Camera;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
+import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Size;
 import android.view.Display;
@@ -23,8 +34,19 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.EnvironmentCompat;
 
+import com.zxx.camera.Utils.ImageUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class camera2Proxy {
 
@@ -46,6 +68,10 @@ public class camera2Proxy {
     private CaptureRequest.Builder mCaptureRequestBuilder;// 相机预览请求的构造器
     private Display mDisplay;
     private ScreenOrientationDetector mScreenOrientationDetector;
+
+    private static final String GALLERY_PATH = Environment.getExternalStoragePublicDirectory(Environment
+            .DIRECTORY_DCIM) + File.separator + "Camera";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
 
     private int mDeviceOrientation = 0;
@@ -75,19 +101,23 @@ public class camera2Proxy {
     public camera2Proxy(Activity activity) {
         mActivity = activity;
         mCameraManager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
-        mOrientationEventListener = new OrientationEventListener(mActivity) {
+        mDisplay = mActivity.getDisplay();
+        mScreenOrientationDetector = new ScreenOrientationDetector(mActivity,new ScreenOrientationDetector.OnDisplayChangedListener(){
             @Override
-            public void onOrientationChanged(int orientation) {
-                mDeviceOrientation = orientation;
+            public void onDisplayOrientationChanged(int displayOrientation) {
+                Log.d(TAG,"DisplayOrientation: "+String.valueOf(displayOrientation));
+
             }
-        };
+        });
+
     }
 
     @SuppressLint("MissingPermission")
     public void openCamera(int width,int height) {
         Log.v(TAG, "openCamera");
         startBackgroundThread();
-        mOrientationEventListener.enable();
+        //mOrientationEventListener.enable();
+        mScreenOrientationDetector.enable(mDisplay);
         try {
             mCameraCharacteristics = mCameraManager.getCameraCharacteristics(Integer.toString(mCameraId));
             StreamConfigurationMap streamConfigurationMap = mCameraCharacteristics.get(CameraCharacteristics
@@ -95,6 +125,7 @@ public class camera2Proxy {
             //预览大小
             //Log.d(TAG, "preview size: " + mPreviewSize.getWidth() + "*" + mPreviewSize.getHeight());
             mPreviewSize = chooseOptimalSize(streamConfigurationMap.getOutputSizes(SurfaceTexture.class),width,height);
+            Log.d(TAG, "preview size: " + mPreviewSize.getWidth() + "*" + mPreviewSize.getHeight());
             //mPreviewSize = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[2];
             Log.d(TAG, "preview size: " + mPreviewSize.getWidth() + "*" + mPreviewSize.getHeight());
             mImageReader = ImageReader.newInstance(mPreviewSize.getWidth(),mPreviewSize.getHeight(),ImageFormat.JPEG,2);
@@ -108,15 +139,22 @@ public class camera2Proxy {
 
     public void releaseCamera(){
         //关闭CameraCaptureSession
-        if(mCameraCaptureSession!=null)
+        if(mCameraCaptureSession!=null) {
             mCameraCaptureSession.close();
+            mCameraCaptureSession = null;
+        }
         //关闭CameraDevice
-        if(mCameraDevice!=null)
+        if(mCameraDevice!=null) {
             mCameraDevice.close();
+            mCameraDevice = null;
+        }
         //关闭图片预览
-        if(mImageReader!=null)
+        if(mImageReader!=null) {
             mImageReader.close();
-        mOrientationEventListener.disable();
+            mImageReader = null;
+        }
+        mScreenOrientationDetector.disable();
+        //mOrientationEventListener.disable();
         //关闭后台线程
         stopBackgroundThread();
     }
@@ -165,15 +203,19 @@ public class camera2Proxy {
         }
     }
 
-    public void switchCamera(){
+    public void switchCamera(int width,int height){
         //TODO
+        mCameraId ^= 1;
+        Log.d(TAG, "switchCamera: mCameraId: " + mCameraId);
+        releaseCamera();
+        openCamera(width,height);
     }
 
 
     public void initPreviewRequest() {
         try {
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            if(mPerviewSurface!=null&&mPreviewSurfaceTexture!=null){
+            if(mPerviewSurface==null&&mPreviewSurfaceTexture!=null){
                 mPreviewSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(),mPreviewSize.getHeight());
                 mPerviewSurface = new Surface(mPreviewSurfaceTexture);
             }
@@ -231,17 +273,14 @@ public class camera2Proxy {
         // 1. 确定期望的宽高
         int desiredWidth;
         int desiredHeight;
-        // 横屏状态, 直接使用 view 的宽高
-        if (isLandscape(screenOrientationDegrees)) {
+        if (mScreenOrientationDetector.isLandscape()) {// 横屏状态, 直接使用 view 的宽高
             desiredWidth = viewWidth;
             desiredHeight = viewHeight;
-        }
-        // 竖屏状态, 反转宽高
-        else {
+        } else {// 竖屏状态, 反转宽高
             desiredWidth = viewHeight;
             desiredHeight = viewWidth;
         }
-
+        Log.v(TAG,"desiredWidth: "+desiredWidth+"desiredHeight: "+desiredHeight);
         Size result = null;
         for (Size size : sizes) {// sizes 已按照从小到大排序
             result = size;
@@ -250,10 +289,41 @@ public class camera2Proxy {
                 return size;
             }
         }
+        //return new Size(1920,1080);
         return result;
     }
 
     public Size getPreviewSize(){
         return mPreviewSize;
+    }
+
+    public void captureStillPicture(){
+        try{
+            CaptureRequest.Builder captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureBuilder.addTarget(mImageReader.getSurface());
+            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);//自动曝光？
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION,mScreenOrientationDetector.getOrientation(
+                    mCameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION)));//旋转角度
+            //TODO：放大
+            mCameraCaptureSession.stopRepeating();//停止任何一个正常进行的重复请求
+            mCameraCaptureSession.abortCaptures();//尽可能快的取消当前队列中或正在处理中的所有捕捉请求
+            final long time = System.currentTimeMillis();
+            mCameraCaptureSession.capture(captureBuilder.build(), new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                    Log.w(TAG, "onCaptureCompleted, time: " + (System.currentTimeMillis() - time));
+                    try{
+                        mCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+                        mCaptureRequest = mCaptureRequestBuilder.build();
+                        mCameraCaptureSession.capture(mCaptureRequest,null,mBackgroundHandler);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                    startPreview();
+                }
+            }, mBackgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

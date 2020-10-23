@@ -1,6 +1,7 @@
 package com.zxx.camera.Camera;
 
 import android.content.Context;
+import android.media.ImageReader;
 import android.util.SparseIntArray;
 import android.view.Display;
 import android.view.OrientationEventListener;
@@ -48,6 +49,14 @@ public class ScreenOrientationDetector {
     public void disable() {
         mOrientationEventListener.disable();
         mDisplay = null;
+    }
+
+
+    public int getOrientation(Integer SensorOrientation){
+        if(SensorOrientation == null)
+            SensorOrientation = 0;
+        int mLastOrientation = DISPLAY_ORIENTATIONS.get(mLastRotation);
+        return (mLastOrientation + SensorOrientation +270)%360;
     }
 
     public boolean isLandscape() {
