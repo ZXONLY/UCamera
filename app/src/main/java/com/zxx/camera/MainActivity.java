@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn1:
                 intent = new Intent(this, SurfaceCamera2Activity.class);
                 break;
-//            case R.id.camera_btn2:
-//                intent = new Intent(this, TextureCameraActivity.class);
-//                break;
+            case R.id.camera_btn2:
+                intent = new Intent(this, TriangleActivity.class);
+                break;
 //            case R.id.camera_btn3:
-//                intent = new Intent(this, GLSurfaceCameraActivity.class);
+//                intent = new Intent(this, Camera2GLActivity.class);
 //                break;
 //            case R.id.camera_btn4:
 //                intent = new Intent(this, SurfaceCamera2Activity.class);
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 200) {
             checkPermission();
         }

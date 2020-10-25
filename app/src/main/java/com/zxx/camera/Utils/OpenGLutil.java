@@ -1,4 +1,4 @@
-package com.zxx.camera.glSurfaceview;
+package com.zxx.camera.Utils;
 
 import android.content.res.Resources;
 import android.opengl.GLES11Ext;

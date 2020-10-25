@@ -9,6 +9,7 @@ import android.media.ImageReader;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,7 @@ public class SurfaceCamera2Activity extends AppCompatActivity implements View.On
     private ImageView mPictureIv;
     private Camera2SurfaceView mCameraView;
     private camera2Proxy mCameraProxy;
+    private ImageUtils mImageUtils;
 
     private static final String GALLERY_PATH = Environment.getExternalStoragePublicDirectory(Environment
             .DIRECTORY_DCIM) + File.separator + "Camera";
@@ -52,13 +54,14 @@ public class SurfaceCamera2Activity extends AppCompatActivity implements View.On
         mCloseIv.setOnClickListener(this);
         mSwitchCameraIv = findViewById(R.id.toolbar_switch_iv);
         mSwitchCameraIv.setOnClickListener(this);
-        //mTakePictureIv = findViewById(R.id.toolbar_switch_iv);
-        mPictureIv = findViewById(R.id.picture_iv);
-                mPictureIv.setImageBitmap(getLatestThumbBitmap());
+        //mPictureIv = findViewById(R.id.picture_iv);
+        //mPictureIv.setImageBitmap(getLatestThumbBitmap());
         mTakePictureIv = findViewById(R.id.take_picture_iv);
         mTakePictureIv.setOnClickListener(this);
         mCameraView = findViewById(R.id.camera_view);
         mCameraProxy = mCameraView.getCameraProxy();
+        mImageUtils = ImageUtils.getInstance();
+        mImageUtils.init(this);
     }
 
 
@@ -75,6 +78,7 @@ public class SurfaceCamera2Activity extends AppCompatActivity implements View.On
             case R.id.take_picture_iv:
                 mCameraProxy.setImageAvailableListener(mOnImageAvailableListener);
                 mCameraProxy.captureStillPicture(); // 拍照
+                //mCameraProxy.takePicture();
                 break;
             case R.id.picture_iv:
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -82,60 +86,10 @@ public class SurfaceCamera2Activity extends AppCompatActivity implements View.On
                 break;
         }
     }
-
-
     public final ImageReader.OnImageAvailableListener mOnImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader) {
-            String fileName = DATE_FORMAT.format(new Date(System.currentTimeMillis())) + ".jpg";
-            File outFile = new File(GALLERY_PATH, fileName);
-            Log.d(TAG, "saveImage. filepath: " + outFile.getAbsolutePath());
-            FileOutputStream os = null;
-            ByteBuffer buffer = reader.acquireNextImage().getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.remaining()];
-            buffer.get(bytes);
-            if (!Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(outFile))) {
-                Log.e(TAG,"no permission");
-                return;
-            }
-            Log.i(TAG,"have permission");
-            try {
-                os = new FileOutputStream(outFile);
-                os.write(bytes);
-                os.flush();
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (os != null) {
-                    try {
-                        os.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            mPictureIv.setImageBitmap(getLatestThumbBitmap());
+            mImageUtils.saveImage(reader.acquireNextImage());
         }
     };
-    private static final String[] STORE_IMAGES = {
-            MediaStore.Images.Thumbnails._ID,
-    };
-
-    public Bitmap getLatestThumbBitmap() {
-        Bitmap bitmap = null;
-        // 按照时间顺序降序查询
-        Cursor cursor = MediaStore.Images.Media.query(this.getContentResolver(), MediaStore.Images.Media
-                .EXTERNAL_CONTENT_URI, STORE_IMAGES, null, null, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC");
-        boolean first = cursor.moveToFirst();
-        if (first) {
-            long id = cursor.getLong(0);
-            bitmap = MediaStore.Images.Thumbnails.getThumbnail(this.getContentResolver(), id, MediaStore.Images
-                    .Thumbnails.MICRO_KIND, null);
-            Log.d(TAG, "bitmap width: " + bitmap.getWidth());
-            Log.d(TAG, "bitmap height: " + bitmap.getHeight());
-        }
-        cursor.close();
-        return bitmap;
-    }
 }
