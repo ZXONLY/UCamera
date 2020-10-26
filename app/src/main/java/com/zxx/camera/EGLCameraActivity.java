@@ -2,9 +2,11 @@ package com.zxx.camera;
 
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
+import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -25,6 +27,8 @@ public class EGLCameraActivity extends AppCompatActivity {
     private camera2Proxy mCameraProxy;
     private int mTextureId = -1;
     private SurfaceTexture mSurfaceTexture;
+    private int mRationWidth = 0;
+    private int mRationHeight = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,20 +48,29 @@ public class EGLCameraActivity extends AppCompatActivity {
 
             @Override
             public void surfaceChanged(@NonNull final SurfaceHolder holder, int format, final int width, final int height) {
+                int previewWidth = mCameraProxy.getPreviewSize().getWidth();
+                int previewHeight = mCameraProxy.getPreviewSize().getHeight();
                 mthread = new Thread(){
                     @Override
                     public void run() {
                         super.run();
                         mEGLbase = new EGLbase();
-                        mEGLbase.render(holder.getSurface(), width, height);
+                        Size pre = mCameraProxy.getPreviewSize();
+                        mEGLbase.render(holder.getSurface(), pre.getWidth(), pre.getHeight());
                         while (!cancle) {
-                            GLES30.glViewport(0, 0, width, height);
+                            GLES20.glViewport(0, 0, width, height);
                             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
                             GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                             mSurfaceTexture.updateTexImage();
                             mcameraDrawer = new CameraDrawer();
                             mcameraDrawer.setTexture(mTextureId);
-                            mcameraDrawer.draw();
+                            if(width>height){
+                                mcameraDrawer.draw(false,pre.getWidth(),pre.getHeight(),width,height,mCameraProxy.getOrientation());
+                                //Log.i("hhhh",mCameraProxy.getOrientation()+"");
+                            } else {
+                                mcameraDrawer.draw(false,pre.getHeight(),pre.getWidth(),width,height,mCameraProxy.getOrientation());
+                                //Log.i("wwwww",mCameraProxy.getOrientation()+"");
+                            }
                             mEGLbase.swapBuffers();
 
                             try {
@@ -83,5 +96,13 @@ public class EGLCameraActivity extends AppCompatActivity {
                 mEGLbase.releaseEGL();
             }
         });
+    }
+    private void setAspectRatio(int width, int height) {
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("Size cannot be negative.");
+        }
+        mRationWidth = width;
+        mRationHeight = height;
+        mSurfaceview.requestLayout();
     }
 }

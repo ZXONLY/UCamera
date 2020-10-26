@@ -8,7 +8,7 @@ import android.view.OrientationEventListener;
 import android.view.Surface;
 
 public class ScreenOrientationDetector {
-    private static final SparseIntArray DISPLAY_ORIENTATIONS = new SparseIntArray();
+    public static final SparseIntArray DISPLAY_ORIENTATIONS = new SparseIntArray();
 
     static {
         DISPLAY_ORIENTATIONS.put(Surface.ROTATION_0,0);
@@ -16,7 +16,7 @@ public class ScreenOrientationDetector {
         DISPLAY_ORIENTATIONS.put(Surface.ROTATION_180,180);
         DISPLAY_ORIENTATIONS.put(Surface.ROTATION_270,270);
     }
-    private int mLastRotation = 0;
+    public int mLastRotation = 0;
     private Display mDisplay;
 
     private final OrientationEventListener mOrientationEventListener;

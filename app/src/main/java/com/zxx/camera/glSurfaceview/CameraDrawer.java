@@ -3,6 +3,7 @@ package com.zxx.camera.glSurfaceview;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
+import android.opengl.Matrix;
 import android.util.Log;
 
 import com.zxx.camera.Utils.OpenGLutil;
@@ -14,17 +15,17 @@ import java.nio.FloatBuffer;
 public class CameraDrawer {
     private final String vertexShaderCode = "" +
             "#version 300 es\n" +
+            "uniform mat4 uMVPMatrix;" +
             "layout (location = 0) in vec4 vPosition;\n" +
             "layout (location = 1) in vec2 aTextureCoord;\n" +
             "out vec2 yuvTexCoords;\n" +
             "void main() { \n" +
-            "     gl_Position  = vPosition;\n" +
+            "     gl_Position  = uMVPMatrix * vPosition;\n" +
             "     gl_PointSize = 10.0;\n" +
             "     yuvTexCoords = aTextureCoord;\n" +
             "}";
     private final String fragmentShaderCode =
             "#version 300 es\n" +
-            "//OpenGL ES3.0外部纹理扩展\n" +
             "#extension GL_OES_EGL_image_external_essl3 : require\n" +
             "precision mediump float;\n" +
             "uniform samplerExternalOES yuvTexSampler;\n" +
@@ -53,8 +54,11 @@ public class CameraDrawer {
     private int mPositionHandle;
     private int mTextureHandle;
     private int uniformSamplers;
+    private int mMatrixHandle;
 
     private static final byte VERTEX_ORDER[] = { 0, 1, 2, 3 }; // order to draw vertices
+
+    private float [] mMVPMatrix = new float[16] ;
 
 //    private static final byte VERTEX_ORDER[] = {
 //            0, 1, 2,  //V0,V1,V2 三个顶点组成一个三角形
@@ -82,12 +86,21 @@ public class CameraDrawer {
         this.texture = texture;
     }
 
-    public void draw(){
+    public void draw(boolean isFront,int dataWidth,int dataHeight,int width,int height,int Orientation){
         GLES30.glUseProgram(mProgram);
         mPositionHandle = GLES30.glGetAttribLocation(mProgram, "vPosition");
         mTextureHandle = GLES30.glGetAttribLocation(mProgram, "aTextureCoord");
         uniformSamplers = GLES30.glGetUniformLocation(mProgram,"yuvTexSampler");
+        mMatrixHandle = GLES30.glGetUniformLocation(mProgram, "uMVPMatrix");
 
+        mMVPMatrix = OpenGLutil.getShowMatrix(dataWidth,dataHeight,width,height);
+        if(isFront){
+            OpenGLutil.flip(mMVPMatrix,true,false);
+            OpenGLutil.rotate(mMVPMatrix,90);
+        }else {
+            OpenGLutil.rotate(mMVPMatrix,(0+Orientation)%360);
+        }
+        GLES20.glUniformMatrix4fv(mMatrixHandle, 1, false, mMVPMatrix, 0);
         //激活并绑定OES纹理
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
         GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
@@ -99,9 +112,9 @@ public class CameraDrawer {
 
         GLES30.glEnableVertexAttribArray(mTextureHandle);
         GLES30.glVertexAttribPointer(mTextureHandle, 2, GLES30.GL_FLOAT, false, 8, textureVerticesBuffer);
-        Log.i("hhh","2");
+        //Log.i("hhh","2");
         GLES30.glDrawElements(GLES30.GL_TRIANGLE_FAN,4,GLES30.GL_UNSIGNED_BYTE,mDrawListBuffer);
-        Log.i("hhh","3");
+        //Log.i("hhh","3");
         GLES30.glDisableVertexAttribArray(mPositionHandle);
         GLES30.glDisableVertexAttribArray(mTextureHandle);
     }

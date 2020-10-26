@@ -409,6 +409,13 @@ public class camera2Proxy {
         }
     }
 
+    public boolean isFront(){
+        return mCameraId == 1;
+    }
+    public int getOrientation(){
+        return ScreenOrientationDetector.DISPLAY_ORIENTATIONS.get(mScreenOrientationDetector.mLastRotation);
+    }
+
     private void stopBackgroundThread(){
         Log.v(TAG, "stopBackgroundThread");
         mBackgroundThread.quitSafely();
