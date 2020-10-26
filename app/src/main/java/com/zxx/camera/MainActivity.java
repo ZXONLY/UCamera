@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn2:
                 intent = new Intent(this, TriangleActivity.class);
                 break;
-//            case R.id.camera_btn3:
-//                intent = new Intent(this, Camera2GLActivity.class);
-//                break;
-//            case R.id.camera_btn4:
-//                intent = new Intent(this, SurfaceCamera2Activity.class);
-//                break;
+            case R.id.camera_btn3:
+                intent = new Intent(this, GLSurfaceActivity.class);
+                break;
+            case R.id.camera_btn4:
+                intent = new Intent(this, EGLCameraActivity.class);
+                break;
 //            case R.id.camera_btn5:
 //                intent = new Intent(this, TextureCamera2Activity.class);
 //                break;

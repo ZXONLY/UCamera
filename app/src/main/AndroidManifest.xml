@@ -24,7 +24,8 @@
             android:name=".surfaceview.SurfaceCamera2Activity"
             android:screenOrientation="portrait"/>
         <activity android:name=".TriangleActivity" />
-        <activity android:name=".Camera2GLActivity"></activity>
+        <activity android:name=".GLSurfaceActivity"></activity>
+        <activity android:name=".EGLCameraActivity"></activity>
     </application>
 
 </manifest>
