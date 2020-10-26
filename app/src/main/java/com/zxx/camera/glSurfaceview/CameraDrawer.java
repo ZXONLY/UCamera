@@ -37,14 +37,14 @@ public class CameraDrawer {
     static float squareCoords[] = {//顶点坐标
             -1.0f, -1.0f,
             1.0f, -1.0f,
-            -1.0f, 1.0f,
-            1.0f,  1.0f,
+            1.0f, 1.0f,
+            -1.0f,  1.0f,
     };
     static float textureVertices[] = {//纹理坐标V0
-            0.0f, 1.0f,
             1.0f, 1.0f,
             1.0f, 0.0f,
             0.0f, 0.0f,
+            0.0f,1.0f
     };
     private FloatBuffer vertexBuffer,textureVerticesBuffer;
     private ByteBuffer mDrawListBuffer;
@@ -92,7 +92,6 @@ public class CameraDrawer {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
         GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
         GLES30.glUniform1i(uniformSamplers, 0);
-//        Log.i("hhh","1");
 
         GLES30.glEnableVertexAttribArray(mPositionHandle);
         GLES30.glVertexAttribPointer(mPositionHandle,2,GLES30.GL_FLOAT,false,8,vertexBuffer);
@@ -101,12 +100,10 @@ public class CameraDrawer {
         GLES30.glEnableVertexAttribArray(mTextureHandle);
         GLES30.glVertexAttribPointer(mTextureHandle, 2, GLES30.GL_FLOAT, false, 8, textureVerticesBuffer);
         Log.i("hhh","2");
-        GLES30.glDrawElements(GLES30.GL_TRIANGLE_FAN,4,GLES30.GL_UNSIGNED_SHORT,mDrawListBuffer);
+        GLES30.glDrawElements(GLES30.GL_TRIANGLE_FAN,4,GLES30.GL_UNSIGNED_BYTE,mDrawListBuffer);
         Log.i("hhh","3");
         GLES30.glDisableVertexAttribArray(mPositionHandle);
         GLES30.glDisableVertexAttribArray(mTextureHandle);
     }
-
-//openGL 搭建一个EGL，创建一个线程（先在java，再用native）
 }
 
