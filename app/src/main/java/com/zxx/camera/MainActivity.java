@@ -14,7 +14,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
-import com.zxx.camera.surfaceview.SurfaceCamera2Activity;
+import com.zxx.camera.View.SurfaceCamera2Activity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn4:
                 intent = new Intent(this, EGLCameraActivity.class);
                 break;
-//            case R.id.camera_btn5:
-//                intent = new Intent(this, TextureCamera2Activity.class);
-//                break;
+            case R.id.camera_btn5:
+                intent = new Intent(this, newEGLCamera2Activity.class);
+                break;
 //            case R.id.camera_btn6:
 //                intent = new Intent(this, GLSurfaceCamera2Activity.class);
 //                break;

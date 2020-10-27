@@ -21,11 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".surfaceview.SurfaceCamera2Activity"
+            android:name=".View.SurfaceCamera2Activity"
             android:screenOrientation="portrait"/>
         <activity android:name=".TriangleActivity" />
         <activity android:name=".GLSurfaceActivity"></activity>
         <activity android:name=".EGLCameraActivity"></activity>
+        <activity android:name=".newEGLCamera2Activity"></activity>
     </application>
 
 </manifest>

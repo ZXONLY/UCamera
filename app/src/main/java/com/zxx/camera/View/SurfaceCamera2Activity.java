@@ -1,34 +1,21 @@
-package com.zxx.camera.surfaceview;
+package com.zxx.camera.View;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.ImageReader;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.os.EnvironmentCompat;
 
 import com.zxx.camera.Camera.camera2Proxy;
 import com.zxx.camera.R;
 import com.zxx.camera.Utils.ImageUtils;
-import com.zxx.camera.glSurfaceview.Camera2GLSurfaceView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class SurfaceCamera2Activity extends AppCompatActivity implements View.OnClickListener {
 

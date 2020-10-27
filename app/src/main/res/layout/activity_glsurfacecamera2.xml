@@ -41,12 +41,12 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <com.zxx.camera.surfaceview.Camera2SurfaceView
+    <com.zxx.camera.View.Camera2SurfaceView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="-2dp"></com.zxx.camera.surfaceview.Camera2SurfaceView>
+        android:layout_marginTop="-2dp"></com.zxx.camera.View.Camera2SurfaceView>
 
     <ImageView
         android:id="@+id/take_picture_iv"

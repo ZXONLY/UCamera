@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
         android:background="@color/colorPrimary"
-        app:contentInsetStart="0dp">
+        android:contentInsetStart="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/toolbar_close_iv_gl"
+                android:id="@+id/toolbar_close_iv_egl_new"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
@@ -32,7 +32,7 @@
                 android:layout_weight="1"/>
 
             <ImageView
-                android:id="@+id/toolbar_switch_iv_gl"
+                android:id="@+id/toolbar_switch_iv_egl_new"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
@@ -41,29 +41,12 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <com.zxx.camera.View.Camera2GLSurfaceView
-        android:id="@+id/camera_view_gl"
+
+    <com.zxx.camera.View.EglSurfaceView
+        android:id="@+id/new_egl_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="-2dp"></com.zxx.camera.View.Camera2GLSurfaceView>
-
-    <ImageView
-        android:id="@+id/take_picture_iv"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/click_button_selector"/>
-
-    <ImageView
-        android:id="@+id/picture_iv"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
-        android:scaleType="centerCrop"/>
+        android:layout_marginTop="-2dp"/>
 
 </RelativeLayout>

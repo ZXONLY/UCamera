@@ -1,23 +1,12 @@
 package com.zxx.camera;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.media.ImageReader;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zxx.camera.Camera.camera2Proxy;
-import com.zxx.camera.glSurfaceview.Camera2GLSurfaceView;
-
-import java.nio.ByteBuffer;
+import com.zxx.camera.View.Camera2GLSurfaceView;
 
 public class GLSurfaceActivity extends AppCompatActivity {
     private static final String TAG = "GLSurfaceCamera2Act";

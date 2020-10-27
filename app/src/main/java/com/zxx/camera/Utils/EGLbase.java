@@ -178,4 +178,7 @@ public class EGLbase {//使用的是EGL14
         }
     }
 
+    public EGLContext getEGLContext(){
+        return mEGLContext;
+    }
 }

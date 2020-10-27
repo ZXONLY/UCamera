@@ -1,4 +1,4 @@
-package com.zxx.camera.glSurfaceview;
+package com.zxx.camera.renderer;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class CameraDrawer {
+public class CameraRender {
     private final String vertexShaderCode = "" +
             "#version 300 es\n" +
             "uniform mat4 uMVPMatrix;" +
@@ -67,7 +67,7 @@ public class CameraDrawer {
 //            0, 4, 1   //V0,V4,V1 三个顶点组成一个三角形
 //     }; // order to draw vertices
 
-    public CameraDrawer(){
+    public CameraRender(){
 
         vertexBuffer = ByteBuffer.allocateDirect(squareCoords.length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         vertexBuffer.put(squareCoords).position(0);
@@ -96,7 +96,7 @@ public class CameraDrawer {
         mMVPMatrix = OpenGLutil.getShowMatrix(dataWidth,dataHeight,width,height);
         if(isFront){
             OpenGLutil.flip(mMVPMatrix,true,false);
-            OpenGLutil.rotate(mMVPMatrix,90);
+            OpenGLutil.rotate(mMVPMatrix,(180-Orientation+360)%360);
         }else {
             OpenGLutil.rotate(mMVPMatrix,(0+Orientation)%360);
         }

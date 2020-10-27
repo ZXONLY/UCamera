@@ -1,13 +1,11 @@
-package com.zxx.camera.surfaceview;
+package com.zxx.camera.View;
 
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.zxx.camera.glSurfaceview;
+package com.zxx.camera.View;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.zxx.camera.Camera.camera2Proxy;
 import com.zxx.camera.Utils.OpenGLutil;
+import com.zxx.camera.renderer.CameraRender;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -20,7 +21,7 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
     private static final String TAG = "Camera2GLSurfaceView";
     private camera2Proxy mCameraProxy;
     private SurfaceTexture mSurfaceTexture;
-    private CameraDrawer mDrawer;
+    private CameraRender mDrawer;
     private int mRatioWidth = 0;
     private int mRatioHeight = 0;
     private float mOldDistance;
@@ -48,7 +49,7 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
         mSurfaceTexture = new SurfaceTexture(mTextureId);
         mSurfaceTexture.setOnFrameAvailableListener(this);
         mCameraProxy.setPreviewSurface(mSurfaceTexture);
-        mDrawer = new CameraDrawer();
+        mDrawer = new CameraRender();
         Log.d(TAG, "onSurfaceCreated. width: " + getWidth() + ", height: " + getHeight());
         mCameraProxy.openCamera(getWidth(), getHeight());
     }
