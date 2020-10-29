@@ -12,7 +12,7 @@ add_library( # Specifies the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${SRCLIST} )
+        ${SRCLIST} src/main/cpp/src/EGLHelper.cpp src/main/cpp/src/EGLThread.cpp)
 
 find_library( # Defines the name of the path variable that stores the
         # location of the NDK library.
@@ -25,5 +25,7 @@ find_library( # Defines the name of the path variable that stores the
 target_link_libraries( # Specifies the target library.
         native-lib
         GLESv2
+        EGL
+        android
         # Links the log library to the target library.
         ${log-lib} )

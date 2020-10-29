@@ -4,8 +4,9 @@
 
 #include "../inc/GLUtil.h"
 #include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/GLES3/gl3.h"
+#include <stdlib.h>
 
-int GLUtil::complieShader(int type, const char *shaderCode) {
+int complieShader(int type, const char *shaderCode) {
     int shader = glCreateShader(type);
     if(shader==0){}
     glShaderSource(shader,1,&shaderCode, nullptr);
@@ -20,7 +21,7 @@ int GLUtil::complieShader(int type, const char *shaderCode) {
     return shader;
 }
 
-int GLUtil::createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
+int createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
     GLint program = glCreateProgram();
     if(0==program){
         LOGE("create program error");
@@ -41,3 +42,5 @@ int GLUtil::createProgram(const char *vertexShaderCode, const char *fragmentShad
     }
     return program;
 }
+
+char *readAssetFile(const char *filename, AAsetManager *mgr)

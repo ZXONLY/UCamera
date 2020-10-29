@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn5:
                 intent = new Intent(this, newEGLCamera2Activity.class);
                 break;
-            case R.id.camera_btn6:
-                intent = new Intent(this, NativeTranglesActivity.class);
-                break;
+//            case R.id.camera_btn6:
+//                intent = new Intent(this, NativeTranglesActivity.class);
+//                break;
         }
         startActivity(intent);
     }

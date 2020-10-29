@@ -6,7 +6,7 @@
 
 
 void Trangles::initGL(const char *vertexShaderCode, const char *fragmentShaderCode) {
-    mProgram = GLUtil::createProgram(vertexShaderCode,fragmentShaderCode);
+    mProgram = createProgram(vertexShaderCode,fragmentShaderCode);
     mAPositionHandle = glGetAttribLocation(mProgram,"aPosition");
     mAColorHandle = glGetAttribLocation(mProgram,"aColor");
 }

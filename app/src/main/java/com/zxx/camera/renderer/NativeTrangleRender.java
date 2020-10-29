@@ -2,12 +2,16 @@ package com.zxx.camera.renderer;
 
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.Surface;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class NativeTrangleRender implements GLSurfaceView.Renderer {
-
+public class NativeTrangleRender //implements GLSurfaceView.Renderer
+{
+    static {
+        System.loadLibrary("native-lib");
+    }
     //顶点着色器
     private final String verticesShaderSource =
             "#version 300 es\n" +
@@ -28,27 +32,25 @@ public class NativeTrangleRender implements GLSurfaceView.Renderer {
                     "void main() {\n" +
                     "     fragColor = vColor;\n" +
                     "}                                     \n";
-    static {
-        System.loadLibrary("native-lib");
-    }
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    //@Override
+    public void onSurfaceCreated(Surface surface) {
         Log.d("hhh","onSurfaceCreated");
-        nativeInit(verticesShaderSource, FRAGMENT_SHADER);
+        nativeInit(surface,verticesShaderSource, FRAGMENT_SHADER);
     }
 
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    //@Override
+    public void onSurfaceChanged( int width, int height) {
         Log.d("hhh","onSurfaceChanged");
-        nativeDraw();
+        nativeSurfaceChanged(width,height);
     }
 
-    @Override
+    //@Override
     public void onDrawFrame(GL10 gl) {
         Log.d("hhh","onDrawFrame");
         nativeDraw();
     }
 
-    public static native void nativeInit(String vertexShaderCode, String fragmentShaderCode);
+    public static native void nativeInit(Surface surface,String vertexShaderCode, String fragmentShaderCode);
     private static native void nativeDraw();
+    private static native void nativeSurfaceChanged(int width, int height);
 }
