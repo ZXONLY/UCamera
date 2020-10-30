@@ -29,6 +29,7 @@ public class EGLRender implements EglSurfaceView.Render {
         mheight = height;
         mwidth = width;
         mTextureId = OpenGLutil.getExternalOESTextureID();
+        Log.d(TAG,"mTextureId: "+mTextureId);
         mSurfaceTexture = new SurfaceTexture(mTextureId);
         mCameraProxy.setPreviewSurface(mSurfaceTexture);
     }

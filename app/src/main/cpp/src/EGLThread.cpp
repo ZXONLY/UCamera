@@ -8,6 +8,9 @@
 EGLThread::EGLThread(){
     pthread_mutex_init(&pthread_mutex, nullptr);
     pthread_cond_init(&pthread_cond, nullptr);
+    onDraw = nullptr;
+    onCreate = nullptr;
+    onChange = nullptr;
 }
 
 EGLThread::~EGLThread() {
@@ -41,13 +44,16 @@ void *eglThreadImpl(void *context){
         }
 
         if(eglThread->isStart){
+            LOGI("hhhhI draw");
             eglThread->onDraw();
             eglHelper->swapBuffers();
 
-            if(true){
+            if(false){
                 pthread_mutex_lock(&eglThread->pthread_mutex);
                 pthread_cond_wait(&eglThread->pthread_cond,&eglThread->pthread_mutex);
                 pthread_mutex_unlock(&eglThread->pthread_mutex);
+            } else{
+                usleep(1000000 / 6);
             }
         }
     }

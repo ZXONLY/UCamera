@@ -6,7 +6,7 @@
 #include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/GLES3/gl3.h"
 #include <stdlib.h>
 
-int complieShader(int type, const char *shaderCode) {
+int GLUtil::complieShader(int type, const char *shaderCode) {
     int shader = glCreateShader(type);
     if(shader==0){}
     glShaderSource(shader,1,&shaderCode, nullptr);
@@ -21,7 +21,7 @@ int complieShader(int type, const char *shaderCode) {
     return shader;
 }
 
-int createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
+int GLUtil::createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
     GLint program = glCreateProgram();
     if(0==program){
         LOGE("create program error");
@@ -43,4 +43,17 @@ int createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) 
     return program;
 }
 
-char *readAssetFile(const char *filename, AAsetManager *mgr)
+char * GLUtil::readAssetFile(const char *filename, AAssetManager *mgr){
+    if(mgr==nullptr){
+        LOGE("pAssetManager is null!");
+        return nullptr;
+    }
+    AAsset *pAsset = AAssetManager_open(mgr,filename,AASSET_MODE_UNKNOWN);
+    off_t len = AAsset_getLength(pAsset);
+    char *pBuffer = (char *)malloc(len+1);
+    pBuffer[len] = '\0';
+    int numByte = AAsset_read(pAsset,pBuffer,len);
+    LOGD("numByte: %d, len: %d", numByte, len);
+    AAsset_close(pAsset);
+    return pBuffer;
+}

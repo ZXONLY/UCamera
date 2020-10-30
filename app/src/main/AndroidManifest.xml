@@ -27,7 +27,7 @@
         <activity android:name=".GLSurfaceActivity"></activity>
         <activity android:name=".EGLCameraActivity"></activity>
         <activity android:name=".newEGLCamera2Activity"></activity>
-        <activity android:name=".NativeTranglesActivity"></activity>
+        <activity android:name=".NativeCameraActivity"></activity>
     </application>
 
 </manifest>

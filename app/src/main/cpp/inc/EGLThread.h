@@ -8,6 +8,8 @@
 #include <pthread.h>
 #include <android/native_window.h>
 #include <EGL/eglplatform.h>
+#include <unistd.h>
+#include "JavaListener.h"
 
 class EGLThread{
 public:
@@ -45,5 +47,6 @@ public:
 
     int surfaceWidth = -1;
     int surfaceHeight = -1;
+    //int texture = -1;
 };
 #endif //CAMERA_EGLTHREAD_H

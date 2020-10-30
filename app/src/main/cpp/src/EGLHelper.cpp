@@ -105,6 +105,7 @@ void EGLHelper::makeCurrent(EGLSurface eglSurface) {
     if(!eglMakeCurrent(mDisplay,eglSurface,eglSurface,mContext)){
         LOGE("eglMakeCurrent(draw,read) failed");
     }
+    LOGD("makeCurrent sucess");
 }
 
 void EGLHelper::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface) {

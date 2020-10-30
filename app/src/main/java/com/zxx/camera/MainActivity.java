@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.zxx.camera.View.SurfaceCamera2Activity;
+import com.zxx.camera.renderer.NativeCameraRender;
 import com.zxx.camera.renderer.NativeTrangleRender;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn5:
                 intent = new Intent(this, newEGLCamera2Activity.class);
                 break;
-//            case R.id.camera_btn6:
-//                intent = new Intent(this, NativeTranglesActivity.class);
-//                break;
+            case R.id.camera_btn6:
+                intent = new Intent(this, NativeCameraActivity.class);
+                break;
         }
         startActivity(intent);
     }
