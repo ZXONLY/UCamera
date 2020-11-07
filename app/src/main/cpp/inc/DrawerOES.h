@@ -18,11 +18,14 @@ public:
     static DrawerOES* getInstance();
     void setupSurfaceTexture(JNIEnv *jni);
     void update();
+    void openCamera(int width,int height);
     AAssetManager *g_pAssetManager;
     ~DrawerOES();
     GLuint texture;
     jobject javaSurfaceTextureObj;
     JavaVM *global_jvm;
+    jobject mCameraProxy;
+    jmethodID openCameraMethodId;
 private:
     DrawerOES();
     JNIEnv *get_env();

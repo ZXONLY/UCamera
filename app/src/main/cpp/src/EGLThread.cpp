@@ -35,6 +35,7 @@ void *eglThreadImpl(void *context){
     while(eglThread->isExit){
         if(!eglThread->isCreate){
             eglThread->isCreate = true;
+            LOGD("onCreate");
             eglThread->onCreate();
         }
 
@@ -100,4 +101,8 @@ void EGLThread::setonChangeCallback(OnChange onChange1) {
 
 void EGLThread::setonCreateCallback(OnCreate onCreate1) {
     onCreate = onCreate1;
+}
+void EGLThread::setWidthandHeight(int width, int height) {
+    surfaceWidth = width;
+    surfaceHeight = height;
 }

@@ -30,10 +30,10 @@ void DrawerOES::create() {
     if(mProgram == GL_NONE){
         LOGE("gl init failed!");
     }
-    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
-    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
-    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
-    g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
+//    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
+//    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
+//    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
+//    g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
 
     glClearColor(0.0f,0.0f,1.0f,1.0f);
 }
@@ -45,57 +45,66 @@ DrawerOES::DrawerOES() {
 }
 DrawerOES::~DrawerOES() {
     glDisableVertexAttribArray(g_position_handle);
-    glDisableVertexAttribArray(g_matrix_handler);
+    //glDisableVertexAttribArray(g_matrix_handler);
     glDisableVertexAttribArray(g_texture_handler);
     glDisableVertexAttribArray(g_texture_coord_handler);
     glDeleteProgram(mProgram);
 }
-void DrawerOES::draw(GLuint texture, float *mMatrix) {
-    glClear(GL_COLOR_BUFFER_BIT);
-// 1. 选择使用的程序
-    glUseProgram(mProgram);
-//2.绑定纹理
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES,texture);
-//3.加载顶点数据
-    glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,2*4,squareCoords);
-    glEnableVertexAttribArray(g_position_handle);
-
-    glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,2*4,textureVertices);
-    glEnableVertexAttribArray(g_texture_coord_handler);
-
-    glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
-    glUniform1i(g_texture_handler,0);
-
-    glDrawArrays(GL_TRIANGLE_STRIP,0,4);
-    glDisableVertexAttribArray(g_position_handle);
-    glDisableVertexAttribArray(g_texture_coord_handler);
-}
+//void DrawerOES::draw(GLuint texture, float *mMatrix) {
+//    glClear(GL_COLOR_BUFFER_BIT);
+//// 1. 选择使用的程序
+//    glUseProgram(mProgram);
+//    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
+//    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
+//    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
+//    g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
+////2.绑定纹理
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_EXTERNAL_OES,texture);
+////3.加载顶点数据
+//    glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,2*4,squareCoords);
+//    glEnableVertexAttribArray(g_position_handle);
+//
+//    glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,2*4,textureVertices);
+//    glEnableVertexAttribArray(g_texture_coord_handler);
+//
+//    glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
+//    glUniform1i(g_texture_handler,0);
+//
+//    glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+//    glDisableVertexAttribArray(g_position_handle);
+//    glDisableVertexAttribArray(g_texture_coord_handler);
+//}
 void DrawerOES::draw(GLuint texture) {
     glClear(GL_COLOR_BUFFER_BIT);
 // 1. 选择使用的程序
     glUseProgram(mProgram);
+    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
+    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
+    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
+    //g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
     //update();
 //2.绑定纹理
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES,texture);
-//3.加载顶点数据
-    glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,2*4,squareCoords);
+//3.加载顶点数据 glVertexAttribPointer
+    glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,8,squareCoords);
     glEnableVertexAttribArray(g_position_handle);
 
-    glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,2*4,textureVertices);
+    glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,8,textureVertices);
     glEnableVertexAttribArray(g_texture_coord_handler);
 
-    float mMatrix[] = {
-            1.4541668,0,0,0,
-            0,1,0,0,
-            0,0,-1,0,
-            0,0,-1.0,1
-    };
+//    float mMatrix[16] = {
+//            1.4541668,0,0,0,
+//            0,1,0,0,
+//            0,0,-1,0,
+//            0,0,-1.0,1
+//    };
 
-    glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
+    //glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
     glUniform1i(g_texture_handler,0);
-   glDrawElements(GL_TRIANGLE_FAN,4,GL_BYTE,VERTEX_ORDER);
+    //glDrawElements(GL_TRIANGLE_FAN,4,GL_BYTE,VERTEX_ORDER);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glDisableVertexAttribArray(g_position_handle);
     glDisableVertexAttribArray(g_texture_coord_handler);
 }
@@ -162,5 +171,16 @@ void DrawerOES::update() {
     } else{
         LOGE("can't get JNIENV");
     }
-
+}
+void DrawerOES::openCamera(int width,int height) {
+    if(!mCameraProxy){
+        return;
+    }
+    JNIEnv *jniEnv =get_env();
+    if(jniEnv!=nullptr){
+        LOGI("open camera");
+        jniEnv->CallVoidMethod(mCameraProxy,openCameraMethodId,width,height);
+    } else{
+        LOGE("can't open camera");
+    }
 }

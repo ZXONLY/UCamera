@@ -101,9 +101,11 @@ EGLSurface EGLHelper::createOffscreenSurface(int width, int height) {
 void EGLHelper::makeCurrent(EGLSurface eglSurface) {
     if(mDisplay==EGL_NO_DISPLAY){
         LOGD("NOTE: makeCurrent w/o display");
+        return;
     }
     if(!eglMakeCurrent(mDisplay,eglSurface,eglSurface,mContext)){
         LOGE("eglMakeCurrent(draw,read) failed");
+        return;
     }
     LOGD("makeCurrent sucess");
 }
@@ -111,6 +113,7 @@ void EGLHelper::makeCurrent(EGLSurface eglSurface) {
 void EGLHelper::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface) {
     if(mDisplay==EGL_NO_DISPLAY){
         LOGD("NOTE: makeCurrent w/o display");
+        return;
     }
     if(!eglMakeCurrent(mDisplay,drawSurface,readSurface,mContext)){
         LOGE("eglMakeCurrent(draw,read) failed");

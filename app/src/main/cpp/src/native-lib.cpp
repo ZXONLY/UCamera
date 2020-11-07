@@ -7,8 +7,8 @@
 #include "EGLHelper.h"
 #include "EGLThread.h"
 #include "DrawerOES.h"
-#include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/native_window_jni.h"
-#include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/native_window.h"
+#include <android/native_window_jni.h>
+#include <android/native_window.h>
 
 //EGLThread *eglThread = NULL;
 //Trangles mShape;
@@ -68,6 +68,7 @@ DrawerOES *mDrawOES = nullptr;
 
 void callBackOnCreate(){
     mDrawOES = DrawerOES::getInstance();
+    mDrawOES->openCamera(eglThread->surfaceWidth,eglThread->surfaceHeight);
     mDrawOES->create();
 }
 
@@ -83,7 +84,7 @@ void callBackOnChange(int width, int height){
 
 void callBackOnDraw(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     mDrawOES = DrawerOES::getInstance();
     mDrawOES->update();
     mDrawOES->draw(mDrawOES->texture);
@@ -104,16 +105,24 @@ LOGE("assetManager is null!")
 * native camera
 ----------------------------------------------------------------------------------------------------*/
 JNIEXPORT void JNICALL
-Java_com_zxx_camera_renderer_NativeCameraRender_nativeInit(JNIEnv *env, jclass clazz, jobject  surface){
+Java_com_zxx_camera_renderer_NativeCameraRender_nativeInit(JNIEnv *env, jclass clazz, jobject  surface,jobject mCameraProxy,jint width,jint height){
     mDrawOES = DrawerOES::getInstance();
+
     env->GetJavaVM(&mDrawOES->global_jvm);
     eglThread = new EGLThread();
     eglThread->setonCreateCallback(callBackOnCreate);
     eglThread->setonChangeCallback(callBackOnChange);
     eglThread->setonDrawCallback(callBackOnDraw);
 
+    jclass obj = env->GetObjectClass(mCameraProxy);
+    mDrawOES->mCameraProxy =env->NewGlobalRef(mCameraProxy);
+
+    mDrawOES->openCameraMethodId = (*env).GetMethodID(obj,"openCamera", "(II)V");
+
     ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
+    eglThread->setWidthandHeight(width,height);
     eglThread->onSurfaceCreate(nativeWindow);
+    env->DeleteLocalRef( obj );
 }
 JNIEXPORT void JNICALL
 Java_com_zxx_camera_renderer_NativeCameraRender_surfaceChanged(JNIEnv *env, jclass clazz,jint width, jint height){

@@ -12,7 +12,7 @@ add_library( # Specifies the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${SRCLIST} src/main/cpp/src/EGLHelper.cpp src/main/cpp/src/EGLThread.cpp src/main/cpp/src/JavaListener.cpp
+        ${SRCLIST} src/main/cpp/src/EGLHelper.cpp src/main/cpp/src/EGLThread.cpp
         )
 
 find_library( # Defines the name of the path variable that stores the

@@ -9,7 +9,6 @@
 #include <android/native_window.h>
 #include <EGL/eglplatform.h>
 #include <unistd.h>
-#include "JavaListener.h"
 
 class EGLThread{
 public:
@@ -22,6 +21,7 @@ public:
     ~EGLThread();
     void onSurfaceCreate(EGLNativeWindowType window);
     void onSurfaceChange(int width,int height);
+    void setWidthandHeight(int width,int Height);
 
     typedef void(*OnCreate)();
     OnCreate onCreate;
