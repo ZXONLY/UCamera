@@ -94,32 +94,6 @@ CameraDevice代表的是当前连接的设备，在成功打开相机后能够�
 * 关闭相机设备
 * 监听当前相机设备的状态，通过CameraDevice.StateCallback的回调监听当前相机设备打开成功，打开失败，断开连接
 
-### 4. Surface
-
-### 5. CameraCaptureSession
-
-### 6. CaptureRequest
-
-### 7. CameraResult
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### 3. CameraDevice
-
-CameraDevice 代表当前连接的相机设备
-
 ### 4. CameraCaptureSession
 
 如果说CameraDevice代表当前连接的相机，那么CameraCaptureSession就是Cmaera实例和CameraService之间的桥梁。我们可以通过向CameraCaptureSession提交一个Capture请求来实现如拍照、预览、设置闪光灯模式、对焦等功能。
