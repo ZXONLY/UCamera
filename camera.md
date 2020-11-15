@@ -83,7 +83,38 @@ Camera2是基于Pipeline，Client(也就是app)需要向相机Service发送请�
 
 ### 2. CameraCharacteristics
 
-CameraCharacteristics是封装了对应相机的基本信息，如相机的朝向``` LENS_FACING ```、
+CameraCharacteristics是封装了对应相机的基本信息，如相机的朝向``` LENS_FACING ```、闪光灯的能力、可使用的AE模式等等。
+
+### 3. CameraDevice
+
+CameraDevice代表的是当前连接的设备，在成功打开相机后能够获取到对应的CameraDevice。CameraDevice有如下几个功能：
+
+* 根据指定的参数创建CameraCaptureSession
+* 根据指定的模板创建Capture.builder
+* 关闭相机设备
+* 监听当前相机设备的状态，通过CameraDevice.StateCallback的回调监听当前相机设备打开成功，打开失败，断开连接
+
+### 4. Surface
+
+### 5. CameraCaptureSession
+
+### 6. CaptureRequest
+
+### 7. CameraResult
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
