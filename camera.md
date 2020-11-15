@@ -149,7 +149,7 @@ CameraCaptureSession在创建Capture请求时有3种模式
 
     调用该方法能在一定程度上会加快拍照的反应速度，但这个命令在使用的过程中，或报出一些异常，可能会造成一些丢帧的情况。
 
-    ![abortCaptures](/Users/bytedance/Desktop/learn/picture/abortCaptures.png)
+    ![abortCaptures](./picture/abortCaptures.png)
 
   * 
 
