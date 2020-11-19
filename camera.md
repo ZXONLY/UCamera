@@ -10,6 +10,8 @@ Camera2是基于Pipeline，Client(也就是app)需要向相机Service发送请�
 
 ## 二.Camera的大致拍摄和预览流程
 
+![preview](./picture/CameraDemo.png)
+
 * 从CameraService中获取到CameraManager
 
   ```java
@@ -160,27 +162,29 @@ CameraCaptureSession在创建Capture请求时有3种模式
 
 ### 6.Surface
 
+Surface是什么
+
+> “Handle onto a raw buffer that is being managed by the screen compositor”		-----android的文档描述
+
+显而易见，Surface是一个raw buffer(屏幕缓冲区)的句柄，我们可以通过Surface去管理这一块raw bufffer。Surface本质上也是一块BUfferQUEUE。Android通过BufferQueue来管理图像图层数据的传输，BufferQueue的两端分别是图像数据的生产者和消费者。(从这也可以看出，我在CameraDemo中关闭了camera，但没有关闭渲染进程，就会报出和BufferQueue相关的错误)。
+
+* SurfaceTexture
+  将Buffer转化为GL中的纹理，图像数据的消费者之一，可以通过openGL对SurfaceTexture进行处理。
+
+下面的View，都是通过请求WindowManagerService创建，最后由SurfaceFlinger创建。
+
 * SurfaceView
+
+  * SurfaceView采用双缓冲的机制。我们的绘制发生在后台画布上，并通过交换前后台的画布来刷新页面。
+  * SurfaceHolder是Surface的持有者和管理者
+  * SurfaceHolder.Callback的各个回调发生在UI线程
+
 * TextureView
-* glSurfaceView
+
+  * 必须开启硬件加速
+
+* GLSurfaceView
+
+  GLSurfaceView继承SurfaceView，除了拥有SurfaceView的特点外，还增加了EGL的管理，并且带了一个单独的渲染线程，提供了render接口负责实际渲染。
 
 ### 7.CaptureResult
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-​	
-
-
-
