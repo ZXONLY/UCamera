@@ -26,6 +26,8 @@ Camera2是基于Pipeline，Client(也就是app)需要向相机Service发送请�
                       .SCALER_STREAM_CONFIGURATION_MAP);
               //预览大小
               mPreviewSize = chooseOptimalSize(streamConfigurationMap.getOutputSizes(SurfaceTexture.class),width,height);
+  ...
+  mCameraManager.openCamera(Integer.toString(mCameraId), mStateCallback, mBackgroundHandler);
   ```
 
 * 创建一个从Pipeline获取图片的CaptureRequest.Builder，创建Surface，并将其其设置为Target Surface
