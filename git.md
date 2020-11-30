@@ -6,6 +6,8 @@
 
 ### Repository(版本库)
 
+### 暂存区
+
 git add是将文件加入到working directory, 而git commit 是把工作区的所有修改提交到版本库中
 
 ## 1. 创建版本库
@@ -68,6 +70,8 @@ git commit -m "write a readme file"
 
 ```git checkout  --文件名```把对应文件名的文件在工作区的修改全部撤销，相当于回到最近一次git commit或git add的状态
 
+```git checkout .```把工作区的全部修改撤销
+
 ```git checkout 分支名```可以切换到对应的分支中
 
 ```git reset HEAD 文件名  ```可以把对应文件名的文件的修改撤销掉
@@ -75,3 +79,12 @@ git commit -m "write a readme file"
 #### git rm
 
 删除对应的文件
+
+### 2.3 分支管理
+
+#### git branch
+
+```git branch 分支名``` 用于创建分支
+
+```git branch```用于查看
+
