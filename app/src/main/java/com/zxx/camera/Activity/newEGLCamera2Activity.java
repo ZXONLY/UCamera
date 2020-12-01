@@ -1,9 +1,10 @@
-package com.zxx.camera;
+package com.zxx.camera.Activity;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.zxx.camera.R;
 import com.zxx.camera.View.EglSurfaceView;
 import com.zxx.camera.renderer.EGLRender;
 

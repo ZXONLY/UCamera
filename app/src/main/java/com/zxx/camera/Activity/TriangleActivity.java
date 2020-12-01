@@ -1,4 +1,4 @@
-package com.zxx.camera;
+package com.zxx.camera.Activity;
 
 import android.opengl.EGLSurface;
 import android.opengl.GLES30;
@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.zxx.camera.R;
 import com.zxx.camera.Utils.EGLbase;
 import com.zxx.camera.renderer.NativeTrangleRender;
 import com.zxx.camera.renderer.TriangleRenderer;

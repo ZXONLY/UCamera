@@ -1,4 +1,4 @@
-package com.zxx.camera;
+package com.zxx.camera.Activity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zxx.camera.Camera.camera2Proxy;
+import com.zxx.camera.R;
 import com.zxx.camera.View.Camera2GLSurfaceView;
 
 public class GLSurfaceActivity extends AppCompatActivity {

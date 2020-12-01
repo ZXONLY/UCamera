@@ -68,7 +68,7 @@ DrawerOES *mDrawOES = nullptr;
 
 void callBackOnCreate(){
     mDrawOES = DrawerOES::getInstance();
-    mDrawOES->openCamera(eglThread->surfaceWidth,eglThread->surfaceHeight);
+    //mDrawOES->openCamera(eglThread->surfaceWidth,eglThread->surfaceHeight);
     mDrawOES->create();
 }
 

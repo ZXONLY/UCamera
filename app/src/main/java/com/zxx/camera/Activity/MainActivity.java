@@ -1,4 +1,4 @@
-package com.zxx.camera;
+package com.zxx.camera.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -14,9 +14,8 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
+import com.zxx.camera.R;
 import com.zxx.camera.View.SurfaceCamera2Activity;
-import com.zxx.camera.renderer.NativeCameraRender;
-import com.zxx.camera.renderer.NativeTrangleRender;
 
 public class MainActivity extends AppCompatActivity {
 

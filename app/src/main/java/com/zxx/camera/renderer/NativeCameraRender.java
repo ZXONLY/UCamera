@@ -45,7 +45,7 @@ public class NativeCameraRender implements SurfaceHolder.Callback{
         Log.i(TAG,"surfaceCreated");
         registerAssetManager(mContext.getAssets());
         nativeInit(holder.getSurface(),mCameraProxy,mwidth,mheight);
-        //mCameraProxy.openCamera(mwidth,mheight);
+        mCameraProxy.openCamera(mwidth,mheight);
     }
 
     @Override

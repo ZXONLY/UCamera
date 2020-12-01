@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,11 +23,15 @@
         <activity
             android:name=".View.SurfaceCamera2Activity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".TriangleActivity" />
-        <activity android:name=".GLSurfaceActivity"></activity>
-        <activity android:name=".EGLCameraActivity"></activity>
-        <activity android:name=".newEGLCamera2Activity"></activity>
-        <activity android:name=".NativeCameraActivity"></activity>
+        <activity android:name=".Activity.TriangleActivity" />
+        <activity android:name=".Activity.GLSurfaceActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.EGLCameraActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.newEGLCamera2Activity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.NativeCameraActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

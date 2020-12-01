@@ -1,4 +1,4 @@
-package com.zxx.camera;
+package com.zxx.camera.Activity;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zxx.camera.Camera.camera2Proxy;
+import com.zxx.camera.R;
 import com.zxx.camera.Utils.EGLbase;
 import com.zxx.camera.Utils.OpenGLutil;
 import com.zxx.camera.renderer.CameraRender;

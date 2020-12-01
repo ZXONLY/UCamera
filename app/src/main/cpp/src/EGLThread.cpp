@@ -14,6 +14,8 @@ EGLThread::EGLThread(){
 }
 
 EGLThread::~EGLThread() {
+    isExit = false;
+    pthread_join(mEGLThread, nullptr);
     pthread_mutex_destroy(&pthread_mutex);
     pthread_cond_destroy(&pthread_cond);
 }
@@ -54,7 +56,7 @@ void *eglThreadImpl(void *context){
                 pthread_cond_wait(&eglThread->pthread_cond,&eglThread->pthread_mutex);
                 pthread_mutex_unlock(&eglThread->pthread_mutex);
             } else{
-                usleep(1000000 / 6);
+                usleep(100000 / 6);
             }
         }
     }
