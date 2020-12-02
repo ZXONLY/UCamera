@@ -21,6 +21,7 @@ public:
     ~EGLThread();
     void onSurfaceCreate(EGLNativeWindowType window);
     void onSurfaceChange(int width,int height);
+    void onSurfaceDestroyed();
     void setWidthandHeight(int width,int Height);
 
     typedef void(*OnCreate)();

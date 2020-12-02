@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.zxx.camera.R;
 import com.zxx.camera.View.SurfaceCamera2Activity;
-
+//TODO：实现Camera1，将两者整合在一起？
 public class MainActivity extends AppCompatActivity {
 
     @Override

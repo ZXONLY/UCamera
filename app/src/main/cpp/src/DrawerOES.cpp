@@ -1,25 +1,34 @@
 #include <DrawerOES.h>
 #include <GLES2/gl2ext.h>
+#include "Mat.h"
 //
 // Created by bytedance on 29/10/2020.
 //
-//const char *vertexShaderSource = "#version 300 es\nuniform mat4 uMVPMatrix;\nlayout (location = 0) in vec4 vPosition;\nlayout (location = 1) in vec2 aTextureCoord;\nout vec2 yuvTexCoords;\n\"void main() { \ngl_Position  = uMVPMatrix * vPosition;\ngl_PointSize = 10.0;\nyuvTexCoords = aTextureCoord;}";
-//const char *fragmentShaderSource ="#version 300 es\n#extension GL_OES_EGL_image_external_essl3 : require\nprecision mediump float;\nuniform samplerExternalOES yuvTexSampler;\nin vec2 yuvTexCoords;\nout vec4 vFragColor;\nvoid main() {\nvFragColor = texture(yuvTexSampler,yuvTexCoords);\n}";
 
 const GLfloat squareCoords[8] = {
         -1.0f, -1.0f,
         1.0f, -1.0f,
-        1.0f, 1.0f,
-        -1.0f,  1.0f,
+        -1.0f, 1.0f,
+        1.0f,  1.0f
 };
 
 const GLfloat textureVertices[8] = {
-        1.0f, 1.0f,
-        1.0f, 0.0f,
         0.0f, 0.0f,
-        0.0f,1.0f
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f
 };
-const GLbyte VERTEX_ORDER[4] = {0,1,2,3};
+const GLfloat mMatrix[4][4] = {
+//            1.3666667,0.0,0.0,0.0,
+//            0.0, 1.0, 0.0, 0.0,
+//            0.0, 0.0, -1.0, 0.0,
+//            0.0, 0.0, -1.0, 1.0
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+};
+//const GLbyte VERTEX_ORDER[] = { 0, 1, 2, 3 }; // order to draw vertices
 DrawerOES *DrawerOES::mDrawer = nullptr;
 void DrawerOES::create() {
     char *vertexShaderSource = GLUtil::readAssetFile("vertexOES.vsh",g_pAssetManager);
@@ -30,10 +39,6 @@ void DrawerOES::create() {
     if(mProgram == GL_NONE){
         LOGE("gl init failed!");
     }
-//    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
-//    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
-//    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
-//    g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
 
     glClearColor(0.0f,0.0f,1.0f,1.0f);
 }
@@ -45,44 +50,20 @@ DrawerOES::DrawerOES() {
 }
 DrawerOES::~DrawerOES() {
     glDisableVertexAttribArray(g_position_handle);
-    //glDisableVertexAttribArray(g_matrix_handler);
+    glDisableVertexAttribArray(g_matrix_handler);
     glDisableVertexAttribArray(g_texture_handler);
     glDisableVertexAttribArray(g_texture_coord_handler);
     glDeleteProgram(mProgram);
 }
-//void DrawerOES::draw(GLuint texture, float *mMatrix) {
-//    glClear(GL_COLOR_BUFFER_BIT);
-//// 1. 选择使用的程序
-//    glUseProgram(mProgram);
-//    g_position_handle = glGetAttribLocation(mProgram,"vPosition");
-//    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
-//    g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
-//    g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
-////2.绑定纹理
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_EXTERNAL_OES,texture);
-////3.加载顶点数据
-//    glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,2*4,squareCoords);
-//    glEnableVertexAttribArray(g_position_handle);
-//
-//    glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,2*4,textureVertices);
-//    glEnableVertexAttribArray(g_texture_coord_handler);
-//
-//    glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
-//    glUniform1i(g_texture_handler,0);
-//
-//    glDrawArrays(GL_TRIANGLE_STRIP,0,4);
-//    glDisableVertexAttribArray(g_position_handle);
-//    glDisableVertexAttribArray(g_texture_coord_handler);
-//}
+
 void DrawerOES::draw(GLuint texture) {
     glClear(GL_COLOR_BUFFER_BIT);
 // 1. 选择使用的程序
     glUseProgram(mProgram);
     g_position_handle = glGetAttribLocation(mProgram,"vPosition");
-    g_texture_handler = glGetAttribLocation(mProgram,"yuvTexSampler");
+    g_texture_handler = glGetUniformLocation(mProgram,"yuvTexSampler");
     g_texture_coord_handler = glGetAttribLocation(mProgram,"aTextureCoord");
-    //g_matrix_handler = glGetAttribLocation(mProgram,"uMVPMatrix");
+    g_matrix_handler = glGetUniformLocation(mProgram,"uMVPMatrix");
     //update();
 //2.绑定纹理
     glActiveTexture(GL_TEXTURE0);
@@ -91,20 +72,20 @@ void DrawerOES::draw(GLuint texture) {
     glVertexAttribPointer(g_position_handle,2,GL_FLOAT,false,8,squareCoords);
     glEnableVertexAttribArray(g_position_handle);
 
+
     glVertexAttribPointer(g_texture_coord_handler,2,GL_FLOAT, false,8,textureVertices);
     glEnableVertexAttribArray(g_texture_coord_handler);
 
-//    float mMatrix[16] = {
-//            1.4541668,0,0,0,
-//            0,1,0,0,
-//            0,0,-1,0,
-//            0,0,-1.0,1
-//    };
-
-    //glUniformMatrix4fv(g_matrix_handler,1, false,mMatrix);
+////    Mat::matrixSetRotateM(mMatrix,180,0.0f,1.0f,0.0f);
+////    Mat::matrixRotateM(mMatrix, -90, 0.0f, 0.0f, 1.0f);
+//    for(int i = 0;i<4;i++){
+//        LOGD("%f %f %f %f",mMatrix[i*4+0],mMatrix[i*4+1],mMatrix[i*4+2],mMatrix[i*4+3])
+//    }
+    glUniformMatrix4fv(g_matrix_handler, 1, GL_FALSE, &mMatrix[0][0]);
     glUniform1i(g_texture_handler,0);
     //glDrawElements(GL_TRIANGLE_FAN,4,GL_BYTE,VERTEX_ORDER);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
     glDisableVertexAttribArray(g_position_handle);
     glDisableVertexAttribArray(g_texture_coord_handler);
 }

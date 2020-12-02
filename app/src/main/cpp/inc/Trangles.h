@@ -13,10 +13,11 @@ public:
     GLint mProgram;
     GLint mAPositionHandle;
     GLint mAColorHandle;
+    GLint mUMVPMatrixHandle;
     GLfloat *mVertexArray;
     GLfloat *mColorArray;
 
-    const char *verticesShaderSource ="#version 300 es\nlayout (location = 0) in vec4 aPosition;\nlayout (location = 1) in vec4 aColor;\nout vec4 vColor;\nvoid main() {\n gl_Position  = aPosition;\nvColor = aColor;\n}";
+    const char *verticesShaderSource ="#version 300 es\nuniform mat4 uMVPMatrix;\nlayout (location = 0) in vec4 aPosition;\nlayout (location = 1) in vec4 aColor;\nout vec4 vColor;\nvoid main() {\n gl_Position  = uMVPMatrix * aPosition;\nvColor = aColor;\n}";
 
     const char *FRAGMENT_SHADER ="#version 300 es\nprecision mediump float;\nin vec4 vColor;\nout vec4 fragColor;\nvoid main() {\n     fragColor = vColor;\n}";
 

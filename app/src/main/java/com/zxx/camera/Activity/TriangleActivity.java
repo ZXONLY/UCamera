@@ -71,6 +71,7 @@ public class TriangleActivity extends AppCompatActivity {
 
             @Override
             public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+                nativeTrangleRender.onSurfaceDestroy();
 //                try {
 //                    cancle = true;
 //                    //mthread.join();

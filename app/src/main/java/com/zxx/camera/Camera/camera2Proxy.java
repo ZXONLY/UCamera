@@ -427,5 +427,31 @@ public class camera2Proxy {
             e.printStackTrace();
         }
     }
+
+    //TODO: 设置录像参数
+    private boolean setVideoRecordParam(String path){
+        return  false;
+    }
+
+    private void startRecordVideo() {
+        try {
+            closePreviewSession();
+            Size recordSize = mPreviewSize;
+            if (mCameraDevice == null) return;
+
+            mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            //TODO：闪光灯
+
+        }catch (CameraAccessException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void closePreviewSession(){
+        if(mCameraCaptureSession != null){
+            mCameraCaptureSession.close();
+            mCameraCaptureSession = null;
+        }
+    }
 }
 

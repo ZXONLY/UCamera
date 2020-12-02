@@ -108,3 +108,6 @@ void EGLThread::setWidthandHeight(int width, int height) {
     surfaceWidth = width;
     surfaceHeight = height;
 }
+void EGLThread::onSurfaceDestroyed(){
+    isExit = false;
+}

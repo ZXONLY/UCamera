@@ -15,11 +15,12 @@ public class NativeTrangleRender //implements GLSurfaceView.Renderer
     //顶点着色器
     private final String verticesShaderSource =
             "#version 300 es\n" +
+                    "uniform mat4 uMVPMatrix;"+
                     "layout (location = 0) in vec4 aPosition;\n" +
                     "layout (location = 1) in vec4 aColor;\n" +
                     "out vec4 vColor;\n" +
                     "void main() {\n" +
-                    "     gl_Position  = aPosition;\n" +
+                    "     gl_Position  = uMVPMatrix * aPosition;\n" +
                     //"     gl_PointSize = 10.0;\n" +
                     "     vColor = aColor;\n" +
                     "}";
@@ -50,7 +51,12 @@ public class NativeTrangleRender //implements GLSurfaceView.Renderer
         nativeDraw();
     }
 
+    public void onSurfaceDestroy(){
+        nativeStopEGLThread();
+    }
+
     public static native void nativeInit(Surface surface,String vertexShaderCode, String fragmentShaderCode);
     private static native void nativeDraw();
     private static native void nativeSurfaceChanged(int width, int height);
+    private static native void nativeStopEGLThread();
 }

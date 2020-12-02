@@ -57,11 +57,12 @@ public class NativeCameraRender implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-
+        nativeStopEGLThread();
     }
 
     private static native void registerAssetManager(AssetManager assetManager);
     private static native void nativeInit(Surface surfac,camera2Proxy mCameraProxy,int mwidth,int mheight);
     private static native void surfaceChanged(int width,int height);
     private static native SurfaceTexture nativeGetSurfaceTexture();
+    private static native void nativeStopEGLThread();
 }
