@@ -16,6 +16,7 @@ import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
+import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -29,12 +30,16 @@ import android.view.SurfaceHolder;
 import androidx.annotation.NonNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class camera2Proxy {
 
@@ -56,6 +61,9 @@ public class camera2Proxy {
     private CaptureRequest.Builder mPreviewRequestBuilder;// 相机预览请求的构造器
     private Display mDisplay;
     private ScreenOrientationDetector mScreenOrientationDetector;
+    private MediaRecorder mMediaRecorder;
+    private Surface mRecordSurface;
+    private AtomicBoolean mIsRecordVideo = new AtomicBoolean();
 
     private static final String GALLERY_PATH = Environment.getExternalStoragePublicDirectory(Environment
             .DIRECTORY_DCIM) + File.separator + "Camera";
@@ -430,21 +438,91 @@ public class camera2Proxy {
 
     //TODO: 设置录像参数
     private boolean setVideoRecordParam(String path){
-        return  false;
+        mMediaRecorder = new MediaRecorder();
+
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setOutputFile(path);
+        //TODO 码率，还要研究下
+        int bitRate = mPreviewSize.getHeight() * mPreviewSize.getWidth();
+        bitRate = mPreviewSize.getWidth() < 1080 ? bitRate * 2 : bitRate;
+
+        mMediaRecorder.setVideoEncodingBitRate(bitRate);
+        mMediaRecorder.setVideoFrameRate(15);
+        mMediaRecorder.setVideoSize(mPreviewSize.getWidth(),mPreviewSize.getWidth());
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+
+        mMediaRecorder.setAudioEncodingBitRate(8000);
+        mMediaRecorder.setAudioChannels(1);
+        mMediaRecorder.setAudioSamplingRate(8000);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        if(isFront()){
+            mMediaRecorder.setOrientationHint((180-getOrientation()+360)%360);
+        }else {
+            mMediaRecorder.setOrientationHint(getOrientation()%360);
+        }
+        try{
+            mMediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return  true;
     }
 
     private void startRecordVideo() {
         try {
             closePreviewSession();
-            Size recordSize = mPreviewSize;
             if (mCameraDevice == null) return;
 
             mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
             //TODO：闪光灯
+            if(mPerviewSurface==null&&mPreviewSurfaceTexture!=null){
+                mPreviewSurfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(),mPreviewSize.getHeight());
+                mPerviewSurface = new Surface(mPreviewSurfaceTexture);
+            }
+
+            mPreviewRequestBuilder.addTarget(mPerviewSurface);
+            mRecordSurface = mMediaRecorder.getSurface();
+            mPreviewRequestBuilder.addTarget(mRecordSurface);
+            List<Surface> surfaceList = new ArrayList<>();
+            surfaceList.add(mPerviewSurface);
+            surfaceList.add(mRecordSurface);
+            //TODO： ZOOM
+            mCameraDevice.createCaptureSession(surfaceList, new CameraCaptureSession.StateCallback() {
+                @Override
+                public void onConfigured(CameraCaptureSession session) {
+                    mCameraCaptureSession = session;
+                    //updatePreview();
+                    mIsRecordVideo.set(true);
+                    mMediaRecorder.start();
+                }
+
+                @Override
+                public void onConfigureFailed(CameraCaptureSession session) {
+
+                }
+            }, mBackgroundHandler);
 
         }catch (CameraAccessException e){
             e.printStackTrace();
         }
+    }
+
+    public void stopVideoRecord(){
+        if (mIsRecordVideo.get()) {
+            mIsRecordVideo.set(false);
+        } else {
+            return;
+        }
+        mMediaRecorder.setOnErrorListener(null);
+        mMediaRecorder.setOnInfoListener(null);
+        mMediaRecorder.setPreviewDisplay(null);
+        mMediaRecorder.stop();
+        mMediaRecorder.reset();
+        mMediaRecorder.release();
     }
 
     private void closePreviewSession(){
