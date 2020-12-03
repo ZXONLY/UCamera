@@ -1,6 +1,8 @@
 package com.zxx.camera.Activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,14 +11,15 @@ import com.zxx.camera.Camera.camera2Proxy;
 import com.zxx.camera.R;
 import com.zxx.camera.View.Camera2GLSurfaceView;
 
-public class GLSurfaceActivity extends AppCompatActivity {
+public class GLSurfaceActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "GLSurfaceCamera2Act";
 
     private ImageView mCloseIv;
     private ImageView mSwitchCameraIv;
     private ImageView mTakePictureIv;
-    private ImageView mPictureIv;
+    private Button mRecordButton;
     private Camera2GLSurfaceView mCameraView;
+
 
     private camera2Proxy mCameraProxy;
 
@@ -34,13 +37,20 @@ public class GLSurfaceActivity extends AppCompatActivity {
 
         mTakePictureIv = findViewById(R.id.take_picture_iv);
 
-        mPictureIv = findViewById(R.id.picture_iv);
+        mRecordButton = findViewById(R.id.record_button);
 
         mCameraView = findViewById(R.id.camera_view_gl);
         mCameraProxy = mCameraView.getCameraProxy();
+        mRecordButton.setOnClickListener(this);
     }
 
 
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.record_button :
+                //mCameraProxy.
+        }
+    }
 }
 

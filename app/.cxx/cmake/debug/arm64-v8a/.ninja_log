@@ -34,3 +34,11 @@
 387	489	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	a8f1fce3b460c108
 1	324	0	CMakeFiles/native-lib.dir/src/main/cpp/src/DrawerOES.cpp.o	5faacf5ec3ce2d0c
 324	440	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	a8f1fce3b460c108
+0	200	0	CMakeFiles/native-lib.dir/src/main/cpp/src/cameranative-lib.cpp.o	bdc5b8d36ababa08
+1	259	0	CMakeFiles/native-lib.dir/src/main/cpp/src/Trangles.cpp.o	507e4b4cff181f8
+1	268	0	CMakeFiles/native-lib.dir/src/main/cpp/src/EGLThread.cpp.o	74c722fe2fb1fcbc
+1	278	0	CMakeFiles/native-lib.dir/src/main/cpp/src/native-lib.cpp.o	dbcc35f3a1c09afa
+2	280	0	CMakeFiles/native-lib.dir/src/main/cpp/src/EGLHelper.cpp.o	c75e1bc96db7443d
+2	312	0	CMakeFiles/native-lib.dir/src/main/cpp/src/GLUtil.cpp.o	2cf8ea01823b972b
+1	328	0	CMakeFiles/native-lib.dir/src/main/cpp/src/DrawerOES.cpp.o	5faacf5ec3ce2d0c
+328	443	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	a8f1fce3b460c108
