@@ -11,6 +11,7 @@
 /.idea/dictionaries
 .DS_Store
 /build
+app/build
 /captures
 .externalNativeBuild
 /.idea/dictionaries/silei.xml
