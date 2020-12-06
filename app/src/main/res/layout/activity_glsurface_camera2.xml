@@ -57,13 +57,17 @@
         android:layout_marginBottom="20dp"
         android:src="@drawable/click_button_selector"/>
 
-    <ImageView
-        android:id="@+id/picture_iv"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/record_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="20dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:textColor="@color/colorButton"
+        android:text="录制"
+        android:layout_marginBottom="20dp"
+        />
 
 </RelativeLayout>

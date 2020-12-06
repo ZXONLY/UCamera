@@ -7,6 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Size;
 import android.view.MotionEvent;
 
 import com.zxx.camera.Camera.camera2Proxy;
@@ -26,6 +27,8 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
     private int mRatioHeight = 0;
     private float mOldDistance;
     private int mTextureId = -1;
+    private int width;
+    private int height;
 
     public Camera2GLSurfaceView(Context context) {
         this(context, null);
@@ -60,6 +63,8 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
         Log.d(TAG, "onSurfaceChanged. width: " + width + ", height: " + height);
         int previewWidth = mCameraProxy.getPreviewSize().getWidth();
         int previewHeight = mCameraProxy.getPreviewSize().getHeight();
+        this.height = height;
+        this.width = width;
         if (width > height) {
             setAspectRatio(previewWidth, previewHeight);
         } else {
@@ -70,11 +75,12 @@ public class Camera2GLSurfaceView extends GLSurfaceView implements GLSurfaceView
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        Size pre = mCameraProxy.getPreviewSize();
         GLES20.glClearColor(0, 0, 0, 0);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         mSurfaceTexture.updateTexImage();
         mDrawer.setTexture(mTextureId);
-        //mDrawer.draw();
+        mDrawer.draw(mCameraProxy.isFront(),pre.getWidth(),pre.getHeight(),width,height,mCameraProxy.getOrientation());
     }
 
     @Override
