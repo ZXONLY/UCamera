@@ -100,9 +100,6 @@ public class CameraRender {
         }else {
             OpenGLutil.rotate(mMVPMatrix,(Orientation)%360);
         }
-        for(int i = 0;i<4;i++){
-            Log.i("camera materx"+i,String.valueOf(mMVPMatrix[i*4+0])+" "+String.valueOf(mMVPMatrix[i*4+1])+" "+String.valueOf(mMVPMatrix[i*4+2])+" "+String.valueOf(mMVPMatrix[i*4+3]));
-        }
         GLES20.glUniformMatrix4fv(mMatrixHandle, 1, false, mMVPMatrix, 0);
         //激活并绑定OES纹理
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);

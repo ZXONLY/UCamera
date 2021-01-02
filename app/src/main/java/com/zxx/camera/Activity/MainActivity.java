@@ -47,13 +47,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.camera_btn6:
                 intent = new Intent(this, NativeCameraActivity.class);
                 break;
+            case R.id.camera_btn7:
+                intent = new Intent(this, DecodeActivity.class);
+                break;
         }
         startActivity(intent);
     }
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, permissions, 200);

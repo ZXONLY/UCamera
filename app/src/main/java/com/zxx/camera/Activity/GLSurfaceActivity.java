@@ -20,6 +20,8 @@ public class GLSurfaceActivity extends AppCompatActivity implements View.OnClick
     private Button mRecordButton;
     private Camera2GLSurfaceView mCameraView;
 
+    private boolean isRecord = false;
+
 
     private camera2Proxy mCameraProxy;
 
@@ -42,6 +44,7 @@ public class GLSurfaceActivity extends AppCompatActivity implements View.OnClick
         mCameraView = findViewById(R.id.camera_view_gl);
         mCameraProxy = mCameraView.getCameraProxy();
         mRecordButton.setOnClickListener(this);
+
     }
 
 
@@ -49,7 +52,14 @@ public class GLSurfaceActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.record_button :
-                //mCameraProxy.
+                if(!isRecord){
+                mCameraProxy.setVideoRecordParam("/sdcard/benchmark/test.mp4");
+                mCameraProxy.startRecordVideo();
+                isRecord = true;
+                }else {
+                    mCameraProxy.stopVideoRecord();
+                    isRecord = false;
+                }
         }
     }
 }

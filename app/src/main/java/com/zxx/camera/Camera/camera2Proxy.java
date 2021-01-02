@@ -437,7 +437,7 @@ public class camera2Proxy {
     }
 
     //TODO: 设置录像参数
-    private boolean setVideoRecordParam(String path){
+    public boolean setVideoRecordParam(String path){
         mMediaRecorder = new MediaRecorder();
 
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -446,7 +446,7 @@ public class camera2Proxy {
         mMediaRecorder.setOutputFile(path);
         //TODO 码率，还要研究下
         int bitRate = mPreviewSize.getHeight() * mPreviewSize.getWidth();
-        bitRate = mPreviewSize.getWidth() < 1080 ? bitRate * 2 : bitRate;
+        bitRate = mPreviewSize.getWidth() < 1080 ? bitRate * 10 : bitRate;
 
         mMediaRecorder.setVideoEncodingBitRate(bitRate);
         mMediaRecorder.setVideoFrameRate(15);
@@ -459,9 +459,9 @@ public class camera2Proxy {
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         if(isFront()){
-            mMediaRecorder.setOrientationHint((180-getOrientation()+360)%360);
+            mMediaRecorder.setOrientationHint(270);
         }else {
-            mMediaRecorder.setOrientationHint(getOrientation()%360);
+            mMediaRecorder.setOrientationHint(90);
         }
         try{
             mMediaRecorder.prepare();
@@ -472,7 +472,7 @@ public class camera2Proxy {
         return  true;
     }
 
-    private void startRecordVideo() {
+    public void startRecordVideo() {
         try {
             closePreviewSession();
             if (mCameraDevice == null) return;
@@ -495,7 +495,7 @@ public class camera2Proxy {
                 @Override
                 public void onConfigured(CameraCaptureSession session) {
                     mCameraCaptureSession = session;
-                    //updatePreview();
+                    updatePreview();
                     mIsRecordVideo.set(true);
                     mMediaRecorder.start();
                 }
@@ -529,6 +529,24 @@ public class camera2Proxy {
         if(mCameraCaptureSession != null){
             mCameraCaptureSession.close();
             mCameraCaptureSession = null;
+        }
+    }
+    /**
+     * 更新预览界面
+     */
+    private void updatePreview() {
+        if (mCameraDevice == null) {
+            return;
+        }
+        try {
+            //  mPreviewBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            mCameraCaptureSession.setRepeatingRequest(
+                    mPreviewRequestBuilder.build(),
+                    null,
+                    mBackgroundHandler
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
