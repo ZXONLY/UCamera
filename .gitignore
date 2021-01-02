@@ -11,6 +11,7 @@
 /.idea/dictionaries
 .DS_Store
 /build
+local.properties
 app/.cxx
 app/build
 /captures
