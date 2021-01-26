@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/inc )
+include_directories(${CMAKE_SOURCE_DIR}/inc ${CMAKE_SOURCE_DIR}/thrid-party/include)
 #include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/inc/ttffmpeg)
 
-aux_source_directory(src/main/cpp/src SRCLIST)
+
+aux_source_directory(src SRCLIST)
+aux_source_directory(thrid-party THRIDPARTY)
+aux_source_directory(OpenGLUtils openGL)
+
+MESSAGE( STATUS "this var key = ${SRCLIST}.")
 
 add_library( # Specifies the name of the library.
         native-lib
@@ -12,7 +17,7 @@ add_library( # Specifies the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${SRCLIST} src/main/cpp/src/EGLHelper.cpp src/main/cpp/src/EGLThread.cpp
+        ${SRCLIST} ${THRIDPARTY} ${openGL}
         )
 
 find_library( # Defines the name of the path variable that stores the

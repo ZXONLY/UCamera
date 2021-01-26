@@ -1,14 +1,12 @@
-////
-//// Created by bytedance on 27/10/2020.
-////
-//
 #include <jni.h>
 #include "Trangles.h"
-#include "EGLHelper.h"
-#include "EGLThread.h"
+#include "../OpenGLUtils/EGLHelper.h"
 #include "DrawerOES.h"
+#include "Thread.h"
+#include "../OpenGLUtils/EGLThread.h"
 #include <android/native_window_jni.h>
 #include <android/native_window.h>
+#include <android/asset_manager_jni.h>
 
 namespace TranglesNF{
 EGLThread *eglThread = NULL;
@@ -38,6 +36,18 @@ JNIEXPORT void JNICALL
 Java_com_zxx_camera_renderer_NativeTrangleRender_nativeInit(JNIEnv *env, jclass clazz, jobject  surface,jstring vertexShaderCode_,jstring fragmentShaderCode_){
     const char *vertexShaderCode = env->GetStringUTFChars(vertexShaderCode_, 0);
     const char *fragmentShaderCode = env->GetStringUTFChars(fragmentShaderCode_, 0);
+
+    basic::Thread *thread = new basic::Thread();
+    std::function<void()> function = [](){LOGD("run task")};
+    if(thread->start()){
+        thread->runTask(function);
+        thread->runTask(function);
+        thread->runTask(function);
+    } else{
+        LOGD("thread create error");
+    }
+
+
 
     TranglesNF::eglThread = new EGLThread();
     TranglesNF::eglThread->setonCreateCallback(TranglesNF::callBackOnCreate);
@@ -101,11 +111,11 @@ extern "C"{
 JNIEXPORT void JNICALL
 Java_com_zxx_camera_renderer_NativeCameraRender_registerAssetManager(JNIEnv *env, jclass thiz,
         jobject asset_manager) {
-if (asset_manager) {
-DrawerOES::getInstance()->g_pAssetManager = AAssetManager_fromJava(env, asset_manager);
-} else {
-LOGE("assetManager is null!")
-}
+    if (asset_manager) {
+        DrawerOES::getInstance()->g_pAssetManager = AAssetManager_fromJava(env, asset_manager);
+    } else {
+        LOGE("assetManager is null!")
+    }
 }
 
 /*----------------------------------------------------------------------------------------------------

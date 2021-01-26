@@ -2,8 +2,8 @@
 // Created by bytedance on 27/10/2020.
 //
 
-#include "../inc/GLUtil.h"
 #include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/GLES3/gl3.h"
+#include "../OpenGLUtils/GLUtil.h"
 #include <stdlib.h>
 
 int GLUtil::complieShader(int type, const char *shaderCode) {

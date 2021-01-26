@@ -8,7 +8,7 @@
 #include <android/asset_manager.h>
 #include <jni.h>
 #include <GLES3/gl3.h>
-#include "GLUtil.h"
+#include "../OpenGLUtils/GLUtil.h"
 
 class DrawerOES{
 public:

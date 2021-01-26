@@ -2,8 +2,8 @@
 // Created by bytedance on 28/10/2020.
 //
 #include <LogUtils.h>
-#include <EGLHelper.h>
-#include "EGLThread.h"
+#include "../OpenGLUtils/EGLThread.h"
+#include "../OpenGLUtils/EGLHelper.h"
 
 EGLThread::EGLThread(){
     pthread_mutex_init(&pthread_mutex, nullptr);

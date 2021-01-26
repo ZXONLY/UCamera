@@ -15,12 +15,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class DecodeActivity extends Activity implements SurfaceHolder.Callback {
-    private static final String SAMPLE = "/sdcard/benchmark" + "/test.mp4";
+    private  String SAMPLE ;
     private PlayerThread mPlayer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SAMPLE =  this.getFilesDir().getAbsolutePath()+"/test.mp4";
         SurfaceView sv = new SurfaceView(this);
         sv.getHolder().addCallback(this);
         setContentView(sv);

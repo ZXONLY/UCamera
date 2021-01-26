@@ -2,9 +2,8 @@
 // Created by bytedance on 28/10/2020.
 //
 
-#include "EGLHelper.h"
 #include "../inc/LogUtils.h"
-
+#include "../OpenGLUtils/EGLHelper.h"
 
 
 EGLHelper::EGLHelper() {

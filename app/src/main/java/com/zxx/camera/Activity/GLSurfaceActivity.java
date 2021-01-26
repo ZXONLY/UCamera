@@ -1,6 +1,7 @@
 package com.zxx.camera.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +29,7 @@ public class GLSurfaceActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,this.getFilesDir().getAbsolutePath());
         setContentView(R.layout.activity_glsurface_camera2);
         initView();
     }
@@ -53,7 +55,7 @@ public class GLSurfaceActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.record_button :
                 if(!isRecord){
-                mCameraProxy.setVideoRecordParam("/sdcard/benchmark/test.mp4");
+                mCameraProxy.setVideoRecordParam(this.getFilesDir().getAbsolutePath()+"/test.mp4");
                 mCameraProxy.startRecordVideo();
                 isRecord = true;
                 }else {

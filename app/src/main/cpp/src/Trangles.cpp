@@ -2,7 +2,7 @@
 // Created by bytedance on 27/10/2020.
 //
 #include "Trangles.h"
-#include "GLUtil.h"
+#include "../OpenGLUtils/GLUtil.h"
 
 const GLfloat mMatrix[4][4] = {
             1.3666667,0.0,0.0,0.0,
