@@ -2,7 +2,7 @@
 // Created by bytedance on 27/10/2020.
 //
 #include "Trangles.h"
-#include "../OpenGLUtils/GLUtil.h"
+#include "../OpenGLUtils/include/GLUtil.h"
 
 const GLfloat mMatrix[4][4] = {
             1.3666667,0.0,0.0,0.0,
@@ -20,6 +20,8 @@ void Trangles::initGL(const char *vertexShaderCode, const char *fragmentShaderCo
     mAPositionHandle = glGetAttribLocation(mProgram,"aPosition");
     mAColorHandle = glGetAttribLocation(mProgram,"aColor");
     mUMVPMatrixHandle = glGetUniformLocation(mProgram,"uMVPMatrix");
+//    LOGD("ffmpeg version == %s","test")
+//    LOGD("ffmpeg version == %s",av_version_info())
 }
 void Trangles::initVertex() {
     mVertexArray = new GLfloat[3*4];

@@ -1,7 +1,6 @@
 package com.zxx.camera.renderer;
 
 import android.opengl.GLES11Ext;
-import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -100,7 +99,7 @@ public class CameraRender {
         }else {
             OpenGLutil.rotate(mMVPMatrix,(Orientation)%360);
         }
-        GLES20.glUniformMatrix4fv(mMatrixHandle, 1, false, mMVPMatrix, 0);
+        GLES30.glUniformMatrix4fv(mMatrixHandle, 1, false, mMVPMatrix, 0);
         //激活并绑定OES纹理
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
         GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);

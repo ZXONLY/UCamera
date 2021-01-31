@@ -1,25 +1,16 @@
 package com.zxx.camera.Utils;
 
+import android.annotation.TargetApi;
 import android.opengl.EGL14;
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
+import android.os.Build;
 import android.util.Log;
+import android.view.Display;
 import android.view.Surface;
-//        获取 EGL Display 对象:eglGetDisplay()
-//        初始化与 EGLDisplay 之间的连接：eglInitialize()
-//        获取 EGLConfig 对象:eglChooseConfig()
-//        创建 EGLContext 实例:eglCreateContext()
-//        创建 EGLSurface 实例:eglCreateWindowSurface()
-//        连接 EGLContext 和 EGLSurface:eglMakeCurrent()
-//        使用 OpenGL ES API 绘制图形:gl_*()
-//        切换 front buffer 和 back buffer 送显:eglSwapBuffer()
-//        断开并释放与 EGLSurface 关联的 EGLContext 对象:eglRelease()
-//        删除 EGLSurface 对象
-//        删除 EGLContext 对象
-//        终止与 EGLDisplay 之间的连接
 
 public class EGLbase {//使用的是EGL14
     private final String TAG = "EGLbase";
@@ -70,11 +61,17 @@ public class EGLbase {//使用的是EGL14
         }
     }
 
-    public EGLSurface render(Surface surface, int width, int height){
-        int[] surfaceAttribList = {EGL14.EGL_NONE};
+    public EGLSurface render(Surface surface){
+        int[] surfaceAttribList = {
+                EGL14.EGL_NONE
+        };
         mEglSurface = EGL14.eglCreateWindowSurface(mEGLDisplay,mEGLConfig,surface,surfaceAttribList,0);
         makeCurrent(mEglSurface);
         return mEglSurface;
+    }
+
+    public EGLSurface render(Surface surface, int width, int height){
+        return render(surface);
     }
 
     private EGLConfig getConfig(boolean isGles3){
@@ -120,6 +117,11 @@ public class EGLbase {//使用的是EGL14
         }
         return eglSurface;
     }
+
+    public void makeCurrent(){
+        makeCurrent(mEglSurface);
+    }
+
     public void makeCurrent(EGLSurface eglSurface){
         if(mEGLDisplay==EGL14.EGL_NO_DISPLAY){
             Log.d(TAG, "NOTE: makeCurrent w/o display");
@@ -167,6 +169,14 @@ public class EGLbase {//使用的是EGL14
             EGL14.eglTerminate(mEGLDisplay);
             mEGLDisplay = null;
         }
+    }
+    /**
+     * Sends the presentation time stamp to EGL.  Time is expressed in nanoseconds.
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void setPresentationTime(long nsecs) {
+        EGLExt.eglPresentationTimeANDROID(mEGLDisplay, mEglSurface, nsecs);
+        checkEglError("eglPresentationTimeANDROID");
     }
     public int getGlVersion() {
         return mGlVersion;

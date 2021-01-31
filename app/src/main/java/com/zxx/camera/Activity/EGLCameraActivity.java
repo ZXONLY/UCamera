@@ -1,7 +1,7 @@
 package com.zxx.camera.Activity;
 
 import android.graphics.SurfaceTexture;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLES30;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,7 +76,7 @@ public class EGLCameraActivity extends AppCompatActivity {
                         Size pre = mCameraProxy.getPreviewSize();
                         mEGLbase.render(holder.getSurface(), pre.getWidth(), pre.getHeight());
                         while (!cancle) {
-                            GLES20.glViewport(0, 0, width, height);
+                            GLES30.glViewport(0, 0, width, height);
                             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
                             GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                             mSurfaceTexture.updateTexImage();

@@ -3,7 +3,7 @@
 //
 
 #include "../inc/LogUtils.h"
-#include "../OpenGLUtils/EGLHelper.h"
+#include "../OpenGLUtils/include/EGLHelper.h"
 
 
 EGLHelper::EGLHelper() {

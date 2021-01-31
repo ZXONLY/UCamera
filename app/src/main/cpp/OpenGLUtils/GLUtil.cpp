@@ -1,0 +1,59 @@
+//
+// Created by bytedance on 27/10/2020.
+//
+
+#include "GLES3/gl3.h"
+#include "include/GLUtil.h"
+#include <stdlib.h>
+
+int GLUtil::complieShader(int type, const char *shaderCode) {
+    int shader = glCreateShader(type);
+    if(shader==0){}
+    glShaderSource(shader,1,&shaderCode, nullptr);
+    glCompileShader(shader);
+    GLint compileStatus = 0;
+    glGetShaderiv(shader,GL_COMPILE_STATUS,&compileStatus);
+    if(!compileStatus){
+        glDeleteShader(shader);
+        LOGE("compile shader error");
+        return 0;
+    }
+    return shader;
+}
+
+int GLUtil::createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
+    GLint program = glCreateProgram();
+    if(0==program){
+        LOGE("create program error");
+    }
+    LOGI("create program sucess");
+    int vertexShader = complieShader(GL_VERTEX_SHADER,vertexShaderCode);
+    int fragmentShader = complieShader(GL_FRAGMENT_SHADER,fragmentShaderCode);
+
+    glAttachShader(program,vertexShader);
+    glAttachShader(program,fragmentShader);
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program,GL_LINK_STATUS,&linkStatus);
+    if(0 == linkStatus){
+        glDeleteProgram(program);
+        LOGE("link program error");
+        return 0;
+    }
+    return program;
+}
+
+char * GLUtil::readAssetFile(const char *filename, AAssetManager *mgr){
+    if(mgr==nullptr){
+        LOGE("pAssetManager is null!");
+        return nullptr;
+    }
+    AAsset *pAsset = AAssetManager_open(mgr,filename,AASSET_MODE_UNKNOWN);
+    off_t len = AAsset_getLength(pAsset);
+    char *pBuffer = (char *)malloc(len+1);
+    pBuffer[len] = '\0';
+    int numByte = AAsset_read(pAsset,pBuffer,len);
+    LOGD("numByte: %d, len: %ld", numByte, len);
+    AAsset_close(pAsset);
+    return pBuffer;
+}

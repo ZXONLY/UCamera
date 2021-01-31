@@ -22,12 +22,12 @@ public class MediaCodecSettings {
     public static final int COLOR_FORMAT_YUV420 = MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible;
 
 
-    public String getmMineType() {
-        return mMineType;
+    public String getmMimeType() {
+        return mMimeType;
     }
 
-    public void setmMineType(String mMineType) {
-        this.mMineType = mMineType;
+    public void setmMimeType(String mMimeType) {
+        this.mMimeType = mMimeType;
     }
 
     public int getmInputColorFormat() {
@@ -98,7 +98,7 @@ public class MediaCodecSettings {
         return mInputColorFormat == COLOR_FORMAT_SURFACE;
     }
 
-    private String mMineType;
+    private String mMimeType;
 
     private int mInputColorFormat;
 
@@ -115,5 +115,74 @@ public class MediaCodecSettings {
     private int mWidth;
 
     private int mHeight;
+
+    public final static class Builder {
+        private final MediaCodecSettings mEncodeSettings;
+
+        /**
+         * constructor
+         */
+        public Builder() {
+            mEncodeSettings = new MediaCodecSettings();
+        }
+
+        public Builder(MediaCodecSettings encodeSettings) {
+            mEncodeSettings = encodeSettings;
+        }
+
+
+        /**
+         * build EncodeSetting instance
+         */
+        public MediaCodecSettings build() {
+            return mEncodeSettings;
+        }
+
+        public Builder setMimeType(String mimeType) {
+            mEncodeSettings.mMimeType = mimeType;
+            return this;
+        }
+
+        public Builder setInputColorFormat(int inputColorFormat) {
+            mEncodeSettings.mInputColorFormat = inputColorFormat;
+            return this;
+        }
+
+        public Builder setFrameRate(int frameRate) {
+            mEncodeSettings.mFrameRate = frameRate;
+            return this;
+        }
+
+        public Builder setIFrameInternal(int iFrameInternal) {
+            mEncodeSettings.mIFrameInternal = iFrameInternal;
+            return this;
+        }
+
+        public Builder setBitRate(int bitRate) {
+            mEncodeSettings.mBitRate = bitRate;
+            return this;
+        }
+
+        public Builder setBitRateMode(int bitRateMode) {
+            mEncodeSettings.mBitRateMode = bitRateMode;
+            return this;
+        }
+
+        public Builder setEncodeProfile(int encodeProfile) {
+            mEncodeSettings.mEncodeProfile = encodeProfile;
+            return this;
+        }
+
+        public Builder setWidth(int width) {
+            mEncodeSettings.mWidth = width;
+            return this;
+        }
+
+        public Builder setHeight(int height) {
+            mEncodeSettings.mHeight = height;
+            return this;
+        }
+    }
+
 
 }

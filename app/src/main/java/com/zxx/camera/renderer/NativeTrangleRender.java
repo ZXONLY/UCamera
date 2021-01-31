@@ -10,6 +10,19 @@ import javax.microedition.khronos.opengles.GL10;
 public class NativeTrangleRender //implements GLSurfaceView.Renderer
 {
     static {
+        Log.d("test","load avcodec");
+        System.loadLibrary("avcodec");
+        Log.d("test","load avfilter");
+        System.loadLibrary("avfilter");
+        Log.d("test","load avformat");
+        System.loadLibrary("avformat");
+        Log.d("test","load avutil");
+        System.loadLibrary("avutil");
+        Log.d("test","load swresample");
+        System.loadLibrary("swresample");
+        Log.d("test","load swscale");
+        System.loadLibrary("swscale");
+        Log.d("test","load native");
         System.loadLibrary("native-lib");
     }
     //顶点着色器

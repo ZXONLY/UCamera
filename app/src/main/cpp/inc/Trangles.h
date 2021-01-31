@@ -7,6 +7,9 @@
 
 #include "LogUtils.h"
 #include "../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/GLES3/gl3.h"
+extern "C"{
+#include "../ffmpeg/include/libavutil/avutil.h"
+};
 
 class Trangles{
 public:

@@ -5,7 +5,6 @@ import android.media.Image;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.ConditionVariable;
 import android.os.Handler;
@@ -61,21 +60,30 @@ public abstract class MediaCodecEncoder {
     }
 
     public static MediaCodecEncoder createEncoder(int runningmode){
-        return null;
+        return new MediaCodecAsyncEncoder();
     }
+
+    public Surface getInputSurface(){
+        return mInputSurface;
+    }
+
+    public MediaFormat getMediaFormat(){
+        return mMediaFormat;
+    }
+
 
     public int initEncoder(MediaCodecSettings settings){
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2){
-            return -1;
+            return MediaCodecResult.CODEC_UNSUPPORTED;
         }
         if(settings.getmBitRateMode() < MediaCodecSettings.BITRATE_MODE_CQ
         || settings.getmBitRateMode() > MediaCodecSettings.BITRATE_MODE_CBR){
             Log.e(TAG,"Dont support bitrate mode " + settings.getmBitRateMode());
-            return -1;//INVALID_PARAM
+            return MediaCodecResult.CODEC_INVALID_PARAM;
         }
 
         if(settings.getmWidth() <= 0 || settings.getmHeight() <= 0){
-            return -1;//INVAILD_VIDEO_SIZE
+            return MediaCodecResult.CODEC_INVAILD_VIDEO_SIZE;
         }
 
         Message msg = new Message();
@@ -87,11 +95,11 @@ public abstract class MediaCodecEncoder {
 
         if(!lock.block(500000)){
             Log.e(TAG,"initEncoder timeout");
-            return -1;
+            return MediaCodecResult.CODEC_INITENCODER_FAIL;
         } else if(mStatus != EncoderStatus.INITED){
-            return -2;
+            return MediaCodecResult.CODEC_INITENCODER_FAIL;
         }
-        return 0;
+        return MediaCodecResult.CODEC_OK;
 
     }
 
@@ -102,7 +110,7 @@ public abstract class MediaCodecEncoder {
 
     public int stopEncode(){
         handleStopEncoder();
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     public int releaseEncode(){
@@ -120,7 +128,7 @@ public abstract class MediaCodecEncoder {
         mCSDData = null;
         mMediaFormat = null;
         mStatus = EncoderStatus.UNSET;
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     public int restartEncode(){
@@ -130,26 +138,26 @@ public abstract class MediaCodecEncoder {
             return ret;
         }
         startEncode();
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     public int encode(MediaFrame frame) throws Exception {
         if(mStatus != EncoderStatus.STARTED){
             Log.e(TAG,"Cannot encode before starting encode.");
-            return  -1;
+            return  MediaCodecResult.CODEC_INVALID_STATUS;
         }
 
         if(mMediaCodecEncoderCallback == null){
             Log.e(TAG,"encoder caller is null! P;ease encoder callback");
-            return  -1;
+            return  MediaCodecResult.CODEC_NO_CALLBACK;
         }
 
         if(!frame.isValid() && !frame.isEndFrame){
             Log.e(TAG,frame.toString());
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_PARAM;
         }
 
-        int ret = 0;
+        int ret = MediaCodecResult.CODEC_OK;
         try{
             if(mEncoderSeetings.useSurfaceInput()){
                 ret = encodeTexture(frame);
@@ -160,7 +168,7 @@ public abstract class MediaCodecEncoder {
             throw e;
         }
 
-        if(ret == 0){
+        if(ret == MediaCodecResult.CODEC_OK){
             Log.i(TAG,"encode... " +frame + " index: " + mInputFrames);
             mInputFrames ++;
             mPTSQueue.offer(frame.pts);
@@ -175,7 +183,7 @@ public abstract class MediaCodecEncoder {
 
     protected int encodeTexture(MediaFrame frame){
         if(mStatus != EncoderStatus.STARTED){
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_STATUS;
         }
         if(frame.isValid()){
             mMediaCodecEncoderCallback.onFillInputSurface(frame);
@@ -184,7 +192,7 @@ public abstract class MediaCodecEncoder {
             Log.i(TAG,"signal end of stream... pts: " + frame.pts);
             mMediaCodec.signalEndOfInputStream();
         }
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     protected  void receiveEncodedData(MediaCodec codec, int index, MediaCodec.BufferInfo bufferInfo){
@@ -306,9 +314,9 @@ public abstract class MediaCodecEncoder {
             }
 
             MediaCodecInfo codecInfo = mMediaCodec.getCodecInfo();
-            MediaCodecInfo.CodecCapabilities codecCapabilities = codecInfo.getCapabilitiesForType(mEncoderSeetings.getmMineType());
+            MediaCodecInfo.CodecCapabilities codecCapabilities = codecInfo.getCapabilitiesForType(mEncoderSeetings.getmMimeType());
 
-            MediaFormat format = MediaFormat.createVideoFormat(mEncoderSeetings.getmMineType(),mEncoderSeetings.getmWidth(),mEncoderSeetings.getmHeight());
+            MediaFormat format = MediaFormat.createVideoFormat(mEncoderSeetings.getmMimeType(),mEncoderSeetings.getmWidth(),mEncoderSeetings.getmHeight());
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT,mEncoderSeetings.getmInputColorFormat());
             format.setInteger(MediaFormat.KEY_FRAME_RATE,mEncoderSeetings.getmFrameRate());
             format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL,mEncoderSeetings.getmIFrameInternal());
@@ -340,32 +348,39 @@ public abstract class MediaCodecEncoder {
                 return ret;
             }
 
+            mMediaCodec.configure(format,null,null,MediaCodec.CONFIGURE_FLAG_ENCODE);
+
+            if(mEncoderSeetings.useSurfaceInput()){
+                mInputSurface = mMediaCodec.createInputSurface();
+            }
+
+
             mStatus = EncoderStatus.INITED;
 
         }catch (Exception e){
             mStatus = EncoderStatus.UNSET;
         }
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     protected int handleStartEncoder(){
         if(mStatus != EncoderStatus.INITED){
             Log.e(TAG,"START encoder with invaild status. Current status: " + mStatus);
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_STATUS;
         }
         Log.i(TAG,"start encode ...");
         mMediaCodec.start();
         mStatus = EncoderStatus.STARTED;
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     protected int handleStopEncoder(){
         if(mStatus != EncoderStatus.STARTED){
             Log.e(TAG,"Stop encoder with invaild status. Current status: " + mStatus);
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_STATUS;
         }
         Log.i(TAG,"Stop encoder ....");
-        int ret = 0;
+        int ret = MediaCodecResult.CODEC_OK;
         mStatus  = EncoderStatus.STOPPED;
         if(mMediaCodec != null){
             mMediaCodec.stop();
@@ -401,24 +416,24 @@ public abstract class MediaCodecEncoder {
     //---------------Inner Methods
     protected int createMediaCodec(){
         if(mStatus != EncoderStatus.UNSET){
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_STATUS;
         }
 
-        MediaCodecInfo mediaCodecInfo = MediaCodecUtils.getMedaiCodecInfo(mEncoderSeetings.getmMineType());
+        MediaCodecInfo mediaCodecInfo = MediaCodecUtils.getMedaiCodecInfo(mEncoderSeetings.getmMimeType());
         if(mediaCodecInfo == null){
             Log.e(TAG,"No invalid codec!");
-            return -1;
+            return MediaCodecResult.CODEC_INITENCODER_FAIL;
         }
 
-        if(configColorFormat(mediaCodecInfo) != 0){
-            return -2;
+        if(configColorFormat(mediaCodecInfo) != MediaCodecResult.CODEC_OK){
+            return MediaCodecResult.CODEC_INITENCODER_FAIL;
         }
 
         try{
-            mMediaCodec = MediaCodec.createEncoderByType(mEncoderSeetings.getmMineType());
+            mMediaCodec = MediaCodec.createEncoderByType(mEncoderSeetings.getmMimeType());
         }catch (Exception e){
             Log.e(TAG,"createByteCodecName throw exception : " + e.toString());
-            return -2;
+            return MediaCodecResult.CODEC_INITENCODER_FAIL;
         }
 
         String strCodec = mMediaCodec.getCodecInfo().getName();
@@ -427,23 +442,23 @@ public abstract class MediaCodecEncoder {
             if(!strCodec.startsWith("OMX.google")){
                 Log.w(TAG,"Update codec: " + strCodec);
             }else{
-                return -3;
+                return MediaCodecResult.CODEC_CODECINFO_ERROR;
             }
         }else {
             Log.i(TAG,"Create codec: " + strCodec);
         }
 
-        return 0;
+        return MediaCodecResult.CODEC_OK;
 
     }
 
     protected int feedEncode(MediaFrame inputFrame, int index) throws Exception{
         if(mStatus != EncoderStatus.STARTED){
-            return -2;
+            return MediaCodecResult.CODEC_INVALID_STATUS;
         }
         if(inputFrame == null){
             Log.e(TAG,"Frame is null, frame number: " + mInputFrames);
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_PARAM;
         }
         if(inputFrame.isValid()){
             Image image = mMediaCodec.getInputImage(index);
@@ -486,24 +501,24 @@ public abstract class MediaCodecEncoder {
             mMediaCodec.queueInputBuffer(index,0,0,inputFrame.pts,MediaCodec.BUFFER_FLAG_END_OF_STREAM);
         }else {
             Log.e(TAG,"invalid input frame: " + inputFrame);
-            return -1;
+            return MediaCodecResult.CODEC_INVALID_PARAM;
         }
-        return 0;
+        return MediaCodecResult.CODEC_OK;
     }
 
     protected int configColorFormat(MediaCodecInfo codecInfo){
-        MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(mEncoderSeetings.getmMineType());
+        MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(mEncoderSeetings.getmMimeType());
 
         if(capabilities.colorFormats == null){
-            return -2;
+            return MediaCodecResult.CODEC_GETCOLORFORMAT_FAIL;
         }
 
         for(int i = 0; i < capabilities.colorFormats.length;i++ ){
             if(capabilities.colorFormats[i] == mEncoderSeetings.getmInputColorFormat()){
-                return 0;
+                return MediaCodecResult.CODEC_OK;
             }
         }
-        return -2;
+        return MediaCodecResult.CODEC_FAIL;
     }
 
     protected static class EncodeSettingsWrapper{

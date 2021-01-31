@@ -1,13 +1,15 @@
 #include <jni.h>
 #include "Trangles.h"
-#include "../OpenGLUtils/EGLHelper.h"
+#include "../OpenGLUtils/include/EGLHelper.h"
 #include "DrawerOES.h"
 #include "Thread.h"
-#include "../OpenGLUtils/EGLThread.h"
+#include "../OpenGLUtils/include/EGLThread.h"
 #include <android/native_window_jni.h>
 #include <android/native_window.h>
 #include <android/asset_manager_jni.h>
-
+extern "C" {
+#include "../ffmpeg/include/libavutil/avutil.h"
+}
 namespace TranglesNF{
 EGLThread *eglThread = NULL;
 Trangles mShape;
@@ -38,7 +40,9 @@ Java_com_zxx_camera_renderer_NativeTrangleRender_nativeInit(JNIEnv *env, jclass 
     const char *fragmentShaderCode = env->GetStringUTFChars(fragmentShaderCode_, 0);
 
     basic::Thread *thread = new basic::Thread();
-    std::function<void()> function = [](){LOGD("run task")};
+    std::function<void()> function = [](){
+        LOGD("run task");
+    };
     if(thread->start()){
         thread->runTask(function);
         thread->runTask(function);

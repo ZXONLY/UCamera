@@ -2,8 +2,13 @@
 // Created by bytedance on 28/10/2020.
 //
 #include <LogUtils.h>
-#include "../OpenGLUtils/EGLThread.h"
-#include "../OpenGLUtils/EGLHelper.h"
+#include "../OpenGLUtils/include/EGLThread.h"
+#include "../OpenGLUtils/include/EGLHelper.h"
+
+extern "C"{
+#include "../ffmpeg/include/libavutil/avutil.h"
+}
+
 
 EGLThread::EGLThread(){
     pthread_mutex_init(&pthread_mutex, nullptr);
@@ -33,6 +38,7 @@ void *eglThreadImpl(void *context){
         LOGE("eglHelper initEgl error");
         return 0;
     }
+    LOGD("%s",av_version_info())
     eglThread->isExit = true;
     while(eglThread->isExit){
         if(!eglThread->isCreate){
