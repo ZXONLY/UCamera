@@ -48,7 +48,8 @@ public class HWEncodeManager {
                 .setWidth(720)
                 .setHeight(1280)
                 .setBitRateMode(MediaCodecSettings.BITRATE_MODE_VBR)
-                .setIFrameInternal(1);
+                .setIFrameInternal(1)
+                .setEncodeProfile(MediaCodecSettings.AVC_PROFILE_HIGH);
         mSettings = builder.build();
         mEncode = MediaCodecEncoder.createEncoder(1);
         int ret = mEncode.initEncoder(mSettings);
@@ -66,6 +67,14 @@ public class HWEncodeManager {
             new Thread(muxerTask).start();
         }
         return ret;
+    }
+
+    public Surface getSurface(){
+        if(mSettings.useSurfaceInput()){
+            return mEncode.getInputSurface();
+        }else {
+            return null;
+        }
     }
 
 
@@ -89,6 +98,7 @@ public class HWEncodeManager {
     private Runnable feedTask = new Runnable() {
         int mInputFrameIndex = 0;
         EGLbase sharedContext;
+        CameraRender cameraRender;
 
         @Override
         public void run() {
@@ -111,7 +121,7 @@ public class HWEncodeManager {
                         sharedContext.makeCurrent();
                     }
 
-//                    yuvTextureDrawer = new YuvTextureDrawer();
+                    cameraRender = new CameraRender();
 //                    ret = yuvTextureDrawer.init();
 //                    if (ret != 0) {
 //                        Log.e(TAG, "init yuv renderer failed.");
@@ -125,7 +135,7 @@ public class HWEncodeManager {
                     public void onFillInputSurface(MediaFrame frame) {
                         if (mSettings.useSurfaceInput()) {
                             GLES30.glViewport(0, 0, width, height);
-                            //yuvTextureDrawer.draw();
+                            cameraRender.draw(false,mSettings.getmWidth(),mSettings.getmHeight(),mSettings.getmWidth(),mSettings.getmHeight(),90);
                             GLES30.glFinish();
                             sharedContext.setPresentationTime(frame.pts * 1000);
                             sharedContext.swapBuffers();
@@ -141,19 +151,15 @@ public class HWEncodeManager {
                 while (mStart) {
                     MediaFrame frame = new MediaFrame();
                     frame.data = new byte[size];
-                    readLength = 0;//inputStream.read(frame.data, 0, size);
-                    if (readLength <= 0) {
-                        break;
-                    } else if (readLength != size) {
-                        Log.e(TAG, "read corrupted YUV Data!!!!");
-                    }
 
                     frame.pts = mInputFrameIndex * 1000000 / frameRate;
                     frame.isEndFrame = false;
                     if (mSettings.useSurfaceInput()) {
-                        frame.pixelFormat = MediaCodecInfoWrapper.PixelFormat.GL_YUV_SPLIT3;
-                        //yuvTextureDrawer.setYUVData(width, height, frame.data);
-                        //frame.texIDs = yuvTextureDrawer.getTextureId();
+                        frame.pixelFormat = MediaCodecInfoWrapper.PixelFormat.GL_OES;
+
+                        //cameraRender.setYUVData(width, height, frame.data);
+                        frame.texIds = new  int[1];
+                        frame.texIds[0] = cameraRender.getTexture();
                     } else {
                         frame.pixelFormat = MediaCodecInfoWrapper.PixelFormat.YUV420P;
                     }

@@ -81,6 +81,10 @@ public class CameraRender {
 
     }
 
+    public int getTexture(){
+        return texture;
+    }
+
     public void setTexture(int texture){
         this.texture = texture;
     }
