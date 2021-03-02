@@ -1,4 +1,4 @@
 package com.zxx.unique.camera;
 
-public class CameraSettings {
+public class UqCameraSettings {
 }

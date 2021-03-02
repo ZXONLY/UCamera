@@ -1,4 +1,4 @@
-package com.zxx.camera.Activity;
+package com.zxx;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -14,6 +14,12 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
+import com.zxx.camera.Activity.DecodeActivity;
+import com.zxx.camera.Activity.EGLCameraActivity;
+import com.zxx.camera.Activity.GLSurfaceActivity;
+import com.zxx.camera.Activity.NativeCameraActivity;
+import com.zxx.camera.Activity.TriangleActivity;
+import com.zxx.camera.Activity.newEGLCamera2Activity;
 import com.zxx.camera.R;
 import com.zxx.camera.View.SurfaceCamera2Activity;
 //TODO：实现Camera1，将两者整合在一起？
