@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(${CMAKE_SOURCE_DIR}/inc ${CMAKE_SOURCE_DIR}/thrid-party/include ${CMAKE_SOURCE_DIR}/OOpenGLUtils/include)
-#include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/inc/ttffmpeg)
+include_directories(${CMAKE_SOURCE_DIR}/inc ${CMAKE_SOURCE_DIR}/thrid-party/include ${CMAKE_SOURCE_DIR}/OOpenGLUtils/include
+        ${CMAKE_SOURCE_DIR}/base/include ${CMAKE_SOURCE_DIR}/base/glutils/include)
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/ffmpeg/include)
 
 
 aux_source_directory(src SRCLIST)
 aux_source_directory(thrid-party THRIDPARTY)
 aux_source_directory(OpenGLUtils openGL)
+aux_source_directory(base BASE)
+aux_source_directory(base/glutils BASEUTILS)
 
 
 MESSAGE( STATUS "this var key = ${SRCLIST}.")
@@ -19,7 +21,7 @@ add_library( # Specifies the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${SRCLIST} ${THRIDPARTY} ${openGL}
+        ${SRCLIST} ${THRIDPARTY} ${openGL} ${BASE} ${BASEUTILS}
         )
 
 find_library( # Defines the name of the path variable that stores the

@@ -5,11 +5,10 @@
 #ifndef CAMERA_EGLTHREAD_H
 #define CAMERA_EGLTHREAD_H
 
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/pthread.h"
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/native_window.h"
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/EGL/eglplatform.h"
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/unistd.h"
-
+#include <pthread.h>
+#include <android/native_window.h>
+#include <EGL/eglplatform.h>
+#include <unistd.h>
 class EGLThread{
 public:
     pthread_t mEGLThread = -1;

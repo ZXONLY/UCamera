@@ -5,9 +5,11 @@
 #ifndef CAMERA_EGLHELPER_H
 #define CAMERA_EGLHELPER_H
 
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/native_window.h"
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/EGL/eglplatform.h"
-#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/EGL/egl.h"
+//#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/android/native_window.h"
+//#include "../../../../../../../../Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/EGL/eglplatform.h"
+#include <EGL/egl.h>
+#include <android/native_window.h>
+#include <EGL/eglplatform.h>
 
 
 class EGLHelper{
