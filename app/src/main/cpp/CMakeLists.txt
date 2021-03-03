@@ -10,6 +10,7 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/unique/core/include
         ${CMAKE_SOURCE_DIR}/unique/core/impl/include
         ${CMAKE_SOURCE_DIR}/unique/engine/include
+        ${CMAKE_SOURCE_DIR}/unique/include
 
         ${CMAKE_SOURCE_DIR}/base/include
         ${CMAKE_SOURCE_DIR}/base/glutils/include

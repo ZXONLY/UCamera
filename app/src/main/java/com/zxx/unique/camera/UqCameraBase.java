@@ -21,9 +21,6 @@ public abstract class UqCameraBase {
         /**
          * Camera open callback
          *
-         * @param cameraType Camera type, reference {@link TECameraSettings.CameraType}
-         * @param ret        Error code, reference {@link TECameraResult}
-         * @param camera     Camera object
          */
         void onCameraOpened(int cameraType, int ret, UqCameraBase camera);
 
@@ -39,7 +36,7 @@ public abstract class UqCameraBase {
         void onCameraClosed(int cameraType, UqCameraBase camera);
 
         /**
-         * @param infoType Reference {@link TECameraResult.Info}
+         * @param infoType Reference
          * @param ext      Extended info
          * @param msg      Extended message
          */

@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include "../../include/UDef.h"
+#include "../../include/UResult.h"
 #include <functional>
-#include "../inc/UDef.h"
-#include "../inc/UResult.h"
 
+
+//using IUTask = std::function<void()>;
 using IUTask = std::function<void()>;
 
 UInterface IUThread{
