@@ -1,4 +1,4 @@
-package com.zxx.camera.mediacodec;
+package com.zxx.unique.mediacodec;
 
 import android.opengl.GLES30;
 import android.util.Log;

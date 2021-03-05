@@ -11,9 +11,10 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/unique/core/impl/include
         ${CMAKE_SOURCE_DIR}/unique/engine/include
         ${CMAKE_SOURCE_DIR}/unique/include
+        ${CMAKE_SOURCE_DIR}/unique/common/include
 
-        ${CMAKE_SOURCE_DIR}/base/include
-        ${CMAKE_SOURCE_DIR}/base/glutils/include
+#        ${CMAKE_SOURCE_DIR}/base/include
+#        ${CMAKE_SOURCE_DIR}/base/glutils/include
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/ffmpeg/include)
@@ -28,6 +29,7 @@ aux_source_directory(unique/core/impl COREIMPL)
 aux_source_directory(unique/base BASE)
 aux_source_directory(unique/camera CAMERA)
 aux_source_directory(unique/engine ENGINE)
+aux_source_directory(unique/common COMMON)
 
 
 
@@ -49,6 +51,7 @@ add_library( # Specifies the name of the library.
         ${BASE}
         ${ENGINE}
         ${COREIMPL}
+        ${COMMON}
 
         )
 

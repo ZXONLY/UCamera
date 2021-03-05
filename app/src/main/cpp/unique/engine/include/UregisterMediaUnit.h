@@ -1,0 +1,8 @@
+//
+// Created by bytedance on 05/03/2021.
+//
+
+#ifndef CAMERA_UREGISTERMEDIAUNIT_H
+#define CAMERA_UREGISTERMEDIAUNIT_H
+
+#endif //CAMERA_UREGISTERMEDIAUNIT_H

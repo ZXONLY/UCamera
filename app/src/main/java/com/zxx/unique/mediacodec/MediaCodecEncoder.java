@@ -1,4 +1,4 @@
-package com.zxx.camera.mediacodec;
+package com.zxx.unique.mediacodec;
 
 import android.annotation.TargetApi;
 import android.media.Image;

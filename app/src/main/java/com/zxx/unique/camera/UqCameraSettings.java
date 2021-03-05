@@ -3,7 +3,7 @@ package com.zxx.unique.camera;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.zxx.camera.mediacodec.MediaFrame;
+import com.zxx.unique.mediacodec.MediaFrame;
 
 public class UqCameraSettings {
 
@@ -36,7 +36,6 @@ public class UqCameraSettings {
 
     /**
      * 拍照结果回调
-     * @since 6.2.0
      */
     public interface PictureCallback {
 

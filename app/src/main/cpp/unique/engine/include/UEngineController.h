@@ -1,0 +1,8 @@
+//
+// Created by bytedance on 05/03/2021.
+//
+
+#ifndef CAMERA_UENGINECONTROLLER_H
+#define CAMERA_UENGINECONTROLLER_H
+
+#endif //CAMERA_UENGINECONTROLLER_H

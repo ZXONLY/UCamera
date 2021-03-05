@@ -1,4 +1,4 @@
-package com.zxx.camera.mediacodec;
+package com.zxx.unique.mediacodec;
 
 public class MediaCodecInfoWrapper {
     public interface PixelFormat{

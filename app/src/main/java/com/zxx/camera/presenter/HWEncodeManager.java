@@ -1,7 +1,6 @@
 package com.zxx.camera.presenter;
 
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.opengl.EGL14;
 import android.opengl.GLES30;
@@ -9,17 +8,15 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.zxx.camera.Utils.EGLbase;
-import com.zxx.camera.mediacodec.MediaCodecEncoder;
-import com.zxx.camera.mediacodec.MediaCodecEncoderCallback;
-import com.zxx.camera.mediacodec.MediaCodecInfoWrapper;
-import com.zxx.camera.mediacodec.MediaCodecResult;
-import com.zxx.camera.mediacodec.MediaCodecSettings;
-import com.zxx.camera.mediacodec.MediaFrame;
-import com.zxx.camera.mediacodec.MediaMutexWrapper;
+import com.zxx.unique.mediacodec.MediaCodecEncoder;
+import com.zxx.unique.mediacodec.MediaCodecEncoderCallback;
+import com.zxx.unique.mediacodec.MediaCodecInfoWrapper;
+import com.zxx.unique.mediacodec.MediaCodecResult;
+import com.zxx.unique.mediacodec.MediaCodecSettings;
+import com.zxx.unique.mediacodec.MediaFrame;
+import com.zxx.unique.mediacodec.MediaMutexWrapper;
 import com.zxx.camera.renderer.CameraRender;
-import com.zxx.camera.renderer.EGLRender;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
