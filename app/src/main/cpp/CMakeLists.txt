@@ -22,7 +22,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/ffmpeg/include)
 
 aux_source_directory(src SRCLIST)
 aux_source_directory(thrid-party THRIDPARTY)
-aux_source_directory(OpenGLUtils openGL)
+aux_source_directory(OpenGLUtils openGL
 
 aux_source_directory(unique/core CORE)
 aux_source_directory(unique/core/impl COREIMPL)

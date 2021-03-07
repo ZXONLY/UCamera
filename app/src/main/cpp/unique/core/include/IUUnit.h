@@ -46,7 +46,8 @@ namespace core {
     } UnitState;
 
 
-    UInterface IUUnit {
+    class IUUnit {
+    public:
         virtual UnitID getUnitId() = 0;
 
         virtual UnitType getUnitType() = 0;

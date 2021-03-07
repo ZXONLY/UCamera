@@ -7,7 +7,7 @@
 
 namespace core{
 
-class IUBin{
+class IUUnitBin : public IUUnit{
 protected:
         std::vector<IUUnit> m_units;
 
