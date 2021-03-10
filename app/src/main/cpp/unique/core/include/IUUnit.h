@@ -7,6 +7,7 @@
 #include <UPipeline.h>
 #include <UResult.h>
 #include <IUThreadPool.h>
+#include <UMsg.h>
 
 namespace core {
     typedef int UnitID;
@@ -66,10 +67,10 @@ namespace core {
         virtual bool isIdentity(UPipeline *pipeline) = 0;
 
         //推模式
-        virtual UResult processInputStream(StreamID inputStreamId, UPipeline pipeline) = 0;
+        virtual UResult processInputStream(StreamID inputStreamId, UPipeline *pipeline) = 0;
 
         //消息处理
-        //virtual UResult postMessage(const TEMsg &msg) = 0;
+        virtual UResult postMessage(const UMsg &msg) = 0;
 
         //消息处理
         //virtual UResult processMessage(const TEMsg &msg, enum ProcessMode mode) = 0;

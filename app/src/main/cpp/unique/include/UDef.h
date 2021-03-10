@@ -15,3 +15,17 @@ typedef enum enumInterruptID{
 using UInterruptResponser = std::function<bool(UInterruptID)>;
 
 
+using U_THREAD_STATE = enum {
+    U_THREAD_STATE_UNINIT = 0x0,
+    U_THREAD_STATE_IDLE,
+    U_THREAD_STATE_RUNNING,
+    U_THREAD_STATE_RUNEND,
+    U_THREAD_STATE_ERROR,
+};
+
+using U_THREAD_TYPE = enum {
+    U_THREAD_TYPE_NORMAL = 0x0,
+    U_THREAD_TYPE_GL,
+};
+
+
