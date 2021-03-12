@@ -29,3 +29,32 @@ using U_THREAD_TYPE = enum {
 };
 
 
+//
+// Created by glumes on 2020/12/10.
+//
+//
+//#ifndef ANDROID_TERECORDTHREADKERNEL_H
+//#define ANDROID_TERECORDTHREADKERNEL_H
+//
+//#include <iostream>
+//
+//namespace kernel {
+//    enum class TEThreadDesc {
+//        GLOBAL_GL_THREAD = 0,
+//        MAIN_RENDER_GL_THREAD = 1,
+//        VIDEO_ENCODE_GL_THREAD = 2,
+//        GET_FRAME_GL_THREAD = 3,
+//        NORMAL_WORK_THREAD = 4,
+//        SINGLE_TASK_THREAD = 5,
+//        DISPLAY_TASK_THREAD = 6
+//    };
+//
+//    struct EnumClassHash {
+//        template <typename T> std::size_t operator()(T t) const { return static_cast<std::size_t>(t); }
+//    };
+//
+//}   // namespace kernel
+//
+//#endif   // ANDROID_TERECORDTHREADKERNEL_H
+
+
