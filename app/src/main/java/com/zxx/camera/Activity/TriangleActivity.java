@@ -40,45 +40,11 @@ public class TriangleActivity extends AppCompatActivity {
             public void surfaceChanged(@NonNull final SurfaceHolder holder, int format, final int width, final int height) {
 
                 nativeTrangleRender.onSurfaceChanged(width,height);
-//                mthread = new Thread(){
-////                    @Override
-////                    public void run(){
-////                        super.run();
-//////                        mEGLbase = new EGLbase();
-//////                        mEGLbase.render(holder.getSurface(),width,height);
-//////                        mtriangleRenderer = new TriangleRenderer();
-////                        nativeTrangleRender.onSurfaceCreated(holder.getSurface());
-////                        while(!cancle){
-//////                            GLES30.glViewport(0, 0, width, height);
-//////
-//////                            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-//////                            GLES30.glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-//////                            mtriangleRenderer.drawTriangle();
-//////                            mEGLbase.swapBuffers();
-////
-////                            nativeTrangleRender.onSurfaceChanged(width,height);
-////                            try {
-////                                Thread.sleep(16);
-////                            } catch (InterruptedException e) {
-////                                e.printStackTrace();
-////                            }
-////                        }
-////                    }
-////                };
-////                cancle = false;
-////                mthread.start();
             }
 
             @Override
             public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
                 nativeTrangleRender.onSurfaceDestroy();
-//                try {
-//                    cancle = true;
-//                    //mthread.join();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-                //mEGLbase.releaseEGL();
             }
         });
     }

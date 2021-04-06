@@ -23,7 +23,7 @@ int GLUtil::complieShader(int type, const char *shaderCode) {
 
 int GLUtil::createProgram(const char *vertexShaderCode, const char *fragmentShaderCode) {
     GLint program = glCreateProgram();
-    if(0==program){
+    if(0 == program){
         LOGE("create program error");
     }
     LOGI("create program sucess");
